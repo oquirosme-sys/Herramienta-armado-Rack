@@ -131,3 +131,4 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
   .table-wrap, .table-wrap.tall { overflow: visible; max-height: none; }
   .tbl th { position: static; }
 }
+.nowrap { white-space: nowrap; } .btn.more { margin-left: .25rem; padding: .15rem .45rem; }

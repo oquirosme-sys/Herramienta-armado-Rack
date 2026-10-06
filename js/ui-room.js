@@ -84,13 +84,16 @@
     }
     function eqRow(eq, i) {
       const cPart = h('td', { class: 'muted' }), cRU = h('td', { class: 'num' }), cPt = h('td', { class: 'num' }), cSup = h('td', { class: 'num' }), cInf = h('td', { class: 'num' }), cPanel = h('td', null), cPct = h('td', { class: 'num' });
-      const sel = UI.select(eqOpts, eq.itemId, v => { eq.itemId = v; const it = Store.item(v); if (!it || Store.roleOfCat(it.categoria) !== 'panel') { eq.tipo = ''; eq.salidas = null; tipoSel.value = ''; salInp.value = ''; } Store.save(); refresh(); }, { label: 'Equipo' });
+      const sel = UI.select(eqOpts, eq.itemId, v => { eq.itemId = v; const it = Store.item(v); if (!it || Store.roleOfCat(it.categoria) !== 'panel') { eq.tipo = ''; eq.salidas = null; eq.mas = []; tipoSel.value = ''; salInp.value = ''; } Store.save(); refresh(); }, { label: 'Equipo' });
       const tipoSel = UI.select(tipos, eq.tipo || '', v => { eq.tipo = v; Store.save(); refresh(); }, { label: 'Tipo de salida', class: 'w-tipo' });
       const salInp = UI.input(eq, 'salidas', { type: 'number', min: 0, step: 1, class: 'w-num', label: 'Salidas', after: refresh });
       const notas = UI.input(eq, 'notas', { label: 'Notas' });
+      const masBtn = h('button', { type: 'button', class: 'btn small more', title: 'Agregar otros tipos de salida en este mismo panel', onclick: () => masDialog(eq, refresh, masBtn) });
+      const masTxt = () => { masBtn.textContent = (eq.mas && eq.mas.length) ? '+' + eq.mas.length : '+ tipo'; };
+      masTxt();
       const tr = h('tr', null,
         h('td', { class: 'num' }, i + 1), h('td', { class: 'c-eq' }, sel), cPart, cRU, cPt, cSup, cInf, cPanel,
-        h('td', null, tipoSel), h('td', null, salInp), cPct, h('td', null, notas),
+        h('td', null, tipoSel), h('td', { class: 'nowrap' }, salInp, masBtn), cPct, h('td', null, notas),
         h('td', { class: 'row-actions' },
           UI.iconBtn('▲', 'Subir', () => move(i, -1)), UI.iconBtn('▼', 'Bajar', () => move(i, 1)),
           UI.iconBtn('⧉', 'Duplicar fila', () => dup(i)), UI.iconBtn('✕', 'Quitar fila', () => del(i), 'danger')));
@@ -103,7 +106,7 @@
         tr.classList.toggle('over', !!fuera); cInf.title = fuera ? 'Excede la capacidad del rack' : '';
         cPanel.textContent = isP ? r.panel.code : ''; cPanel.className = isP ? 'strong' : '';
         cPct.textContent = isP ? U.pct(r.panel.np ? r.panel.labeled / r.panel.np : 0) : '';
-        tipoSel.disabled = !isP; salInp.disabled = !isP;
+        tipoSel.disabled = !isP; salInp.disabled = !isP; masBtn.disabled = !isP; masTxt();
         tr.firstChild.style.borderLeft = '6px solid ' + (it ? ix.colorOf(it) : 'transparent');
       });
       return tr;
@@ -175,6 +178,34 @@
 
     return h('div', { class: 'rack-layout' },
       h('div', { class: 'stack' }, UI.card('Datos del cuarto', datos), eqCard, outCard, pwCard), elevCard);
+  }
+
+  /** Tipos de salida adicionales de un mismo patch panel (p. ej. 12 D + 12 W). Se asignan en orden tras las salidas del tipo principal. */
+  function masDialog(eq, refresh, btn) {
+    const item = Store.item(eq.itemId), np = item ? item.puertos || 0 : 0;
+    eq.mas = eq.mas || [];
+    const tipos = [{ value: '', label: '— tipo —' }].concat(Store.catalog.tiposSalida.filter(t => t.codigo !== '-').map(t => ({ value: t.codigo, label: t.codigo + ' — ' + t.nombre })));
+    const info = h('p', { class: 'status' }), host = h('div', { class: 'stack' });
+    const calcInfo = () => {
+      const masSum = eq.mas.reduce((a, m) => a + (Number(m.cant) || 0), 0);
+      const blank = eq.salidas === null || eq.salidas === undefined || eq.salidas === '';
+      const first = blank ? Math.max(0, np - masSum) : Number(eq.salidas) || 0;
+      const total = first + masSum;
+      info.className = 'status ' + (total > np ? 'bad' : 'ok');
+      info.textContent = 'Panel de ' + np + ' puertos: ' + (eq.tipo || 'sin tipo') + ' ×' + first + (eq.mas.length ? ' + ' + eq.mas.map(m => (m.tipo || '?') + ' ×' + (m.cant || 0)).join(' + ') : '') + ' = ' + total + ' de ' + np + (total > np ? ' (sobran ' + (total - np) + ': se recortan)' : ' (' + (np - total) + ' sin salida)');
+    };
+    const build = () => {
+      U.clear(host);
+      host.appendChild(h('p', { class: 'hint' }, 'El tipo y las salidas del panel (columnas de la tabla) son el primer tramo, desde el puerto 1. Cada tipo adicional continúa a partir del puerto siguiente. Si deja "Salidas" vacío, el primer tramo ocupa los puertos que sobren.'));
+      eq.mas.forEach((m, i) => host.appendChild(h('div', { class: 'toolbar' },
+        UI.select(tipos, m.tipo, v => { m.tipo = v; calcInfo(); }), UI.input(m, 'cant', { type: 'number', min: 1, step: 1, save: false, after: calcInfo, class: 'w-num' }), h('span', { class: 'muted' }, 'salidas'),
+        UI.iconBtn('✕', 'Quitar', () => { eq.mas.splice(i, 1); build(); }, 'danger'))));
+      host.appendChild(h('div', { class: 'toolbar' }, UI.btn('+ Agregar otro tipo', () => { eq.mas.push({ tipo: '', cant: 12 }); build(); }, 'primary')));
+      host.appendChild(info); calcInfo();
+    };
+    build();
+    UI.modal('Tipos de salida del panel', host, [{ label: 'Cancelar', onclick: () => { eq.mas = JSON.parse(snap); } }, { label: 'Aceptar', cls: 'primary', onclick: () => { eq.mas = eq.mas.filter(m => m.tipo && Number(m.cant) > 0); Store.save(); refresh(); if (btn) btn.textContent = eq.mas.length ? '+' + eq.mas.length : '+ tipo'; } }]);
+    var snap = JSON.stringify(eq.mas);
   }
 
   function drawElevation(host, C, room) {

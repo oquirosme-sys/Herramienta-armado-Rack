@@ -51,12 +51,20 @@
       if (row.role === 'panel') {
         panelN++;
         const np = item.puertos || 0;
-        const used = (eq.salidas === null || eq.salidas === undefined || eq.salidas === '') ? np : Math.min(np, Number(eq.salidas) || 0);
+        // Tramos de tipos de salida consecutivos: el principal (tipo/salidas) y los adicionales (eq.mas)
+        const mas = (eq.mas || []).filter(m => m.tipo && Number(m.cant) > 0);
+        const masSum = mas.reduce((a, m) => a + Number(m.cant), 0);
+        const blank = eq.salidas === null || eq.salidas === undefined || eq.salidas === '';
+        const first = blank ? Math.max(0, np - masSum) : Math.min(np, Number(eq.salidas) || 0);
+        const segs = [{ tipo: eq.tipo || '', cant: first }].concat(mas.map(m => ({ tipo: m.tipo, cant: Number(m.cant) })));
+        const byPort = []; segs.forEach(sg => { for (let k = 0; k < sg.cant && byPort.length < np; k++) byPort.push(sg.tipo); });
+        const used = byPort.length;
         const code = room.codigo + '-' + panelLetters(panelN);
-        const P = { row, eq, code, np, used, tipo: eq.tipo || '', ports: [], labeled: 0, blocks: Math.ceil(np / 24) };
+        const tiposTxt = [...new Set(segs.filter(sg => sg.tipo && sg.cant > 0).map(sg => sg.tipo))].join('/');
+        const P = { row, eq, code, np, used, tipo: tiposTxt, ports: [], labeled: 0, blocks: Math.ceil(np / 24) };
         for (let p = 1; p <= np; p++) {
           const ov = (room.portTipos || {})[eq.id + ':' + p] || '';
-          const t = ov ? (ov === '-' ? '' : ov) : (p <= used ? P.tipo : '');
+          const t = ov ? (ov === '-' ? '' : ov) : (byPort[p - 1] || '');
           let salida = '';
           if (t) {
             counters[t] = (counters[t] || 0) + 1;
