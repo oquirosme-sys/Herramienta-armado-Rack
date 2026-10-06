@@ -28,7 +28,6 @@
       UI.field('Elaboró', UI.input(p, 'elaboro')),
       UI.field('Revisión del plano', UI.input(p, 'revision')),
       UI.field('Jack por defecto', UI.select(UI.itemOptions(jacks, '— sin jack —'), p.jackId, v => { p.jackId = v; Store.save(); }), 'Se cuenta uno por cada salida etiquetada en la lista de materiales.', 'span-2'),
-      UI.field('Reserva de cableado (%)', UI.input(p, 'reservaCable', { type: 'number', min: 0, step: 1 }), 'Se suma a la longitud de cable de los tramos (curvas, remates, reserva).'),
     );
 
     /* --- Niveles --- */
@@ -59,7 +58,7 @@
             if (code) { Store.duplicateRoom(n.id, code); App.refreshTabs(); render(root); UI.toast('Nivel duplicado.'); }
           }),
           UI.iconBtn('✕', 'Eliminar nivel', async () => {
-            if (await UI.confirm('¿Eliminar el nivel ' + n.codigo + ' con todos sus equipos, etiquetado y tramos? No se puede deshacer.', 'Eliminar')) {
+            if (await UI.confirm('¿Eliminar el nivel ' + n.codigo + ' con todos sus equipos, etiquetado? No se puede deshacer.', 'Eliminar')) {
               Store.removeRoom(n.id); App.refreshTabs(); render(root);
             }
           }, 'danger'),
@@ -68,7 +67,7 @@
     const niveles = h('div', null,
       p.niveles.length ? h('div', { class: 'table-wrap' }, h('table', { class: 'tbl' },
         h('thead', null, h('tr', null, ['#', 'Código', 'Descripción', 'Montaje', 'RU usados', 'Salidas', ''].map(t => h('th', null, t)))), tbody))
-        : h('p', { class: 'empty' }, 'Todavía no hay niveles. Agregue el primero: cada nivel (cuarto de telecomunicaciones / rack) crea su propia pestaña con su rack, equipos, etiquetado y tramos.'),
+        : h('p', { class: 'empty' }, 'Todavía no hay niveles. Agregue el primero: cada nivel (cuarto de telecomunicaciones / rack) crea su propia pestaña con su rack, equipos, y etiquetado.'),
       h('div', { class: 'toolbar' }, UI.btn('+ Agregar nivel', () => addDialog(root), 'primary')),
     );
 
@@ -92,8 +91,7 @@
       h('li', null, 'Llene los datos del proyecto y agregue los niveles (cuartos de telecomunicaciones). Cada nivel aparece como una pestaña.'),
       h('li', null, 'En cada nivel: elija el rack, los organizadores verticales y los equipos de arriba hacia abajo; la vista del rack y el etiquetado se generan solos.'),
       h('li', null, 'A cada patch panel asígnele su tipo de salida (D, C, W…) y cuántas salidas usa; el etiquetado se llena solo y se puede ajustar puerto por puerto (pestaña Etiquetado).'),
-      h('li', null, 'En "Tramos" registre las canastas y tuberías de cada nivel (longitud, tipo y cableado).'),
-      h('li', null, 'La Memoria de cálculo consolida cuartos, salidas por tipo, canalización, cableado, potencia y lista de materiales.'),
+      h('li', null, 'La Memoria de cálculo consolida cuartos, salidas por tipo, potencia y lista de materiales.'),
       h('li', null, 'Si necesita una marca, equipo, tipo de canasta, tubería o cable que no está en la lista, pídaselo al administrador (el catálogo solo lo edita el administrador).'),
       h('li', null, 'Los datos se guardan en este navegador; use Archivo ▸ Exportar proyecto para respaldarlos o compartirlos.'));
   }

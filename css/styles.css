@@ -97,7 +97,7 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
 .tbl.ports tr.noout td { color: var(--muted); }
 
 /* ---------- Vista del rack ---------- */
-.elev { display: grid; grid-template-columns: 34px 16px 1fr 16px 34px; font-size: .72rem; }
+.elev { display: grid; grid-template-columns: 30px 28px 1fr 28px 30px; font-size: .72rem; }
 .elev-n { display: flex; align-items: center; justify-content: center; color: var(--muted); border-bottom: 1px solid var(--line-2); font-variant-numeric: tabular-nums; }
 .elev-nums:last-child .elev-n { }
 .elev-rack { border: 2px solid #3b4652; border-radius: 3px; background: repeating-linear-gradient(var(--surface), var(--surface) calc(var(--rU) - 1px), var(--line-2) var(--rU)); }
@@ -105,7 +105,7 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
 .elev-b span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .elev-b.libre { background: #fff !important; border-bottom: 1px dashed #aaa; color: #888; } .elev-b.empty { background: transparent; border-bottom: 1px solid var(--line-2); }
 .elev-b.ups, .elev-b.equipo[style*="2F75B5"] { color: #111; }
-.elev-org { background: transparent; } .elev-org.on { background: #8EA9DB; border-left: 1px solid #3b4652; border-right: 1px solid #3b4652; writing-mode: vertical-rl; text-align: center; display: flex; align-items: center; justify-content: center; color: #12233f; font-size: .62rem; overflow: hidden; }
+.elev-org { background: transparent; } .elev-org.on { background: #8EA9DB; border-left: 1px solid #3b4652; border-right: 1px solid #3b4652; writing-mode: vertical-rl; text-align: center; display: flex; align-items: center; justify-content: center; color: #12233f; font-size: .66rem; font-weight: 600; letter-spacing: .02em; overflow: hidden; }
 .legend { display: flex; flex-wrap: wrap; gap: .3rem .8rem; margin-top: .75rem; font-size: .75rem; color: var(--muted); } .legend i { display: inline-block; width: 11px; height: 11px; border: 1px solid rgba(0,0,0,.3); margin-right: .25rem; vertical-align: -1px; }
 
 /* ---------- Modal y avisos ---------- */

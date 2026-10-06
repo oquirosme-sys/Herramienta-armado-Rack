@@ -1,5 +1,5 @@
 /* Memoria de cálculo: consolida todos los niveles (equivale a la hoja Resumen del Excel,
-   más resúmenes de canalización y cableado). Solo lectura; se recalcula cada vez que se abre. */
+   Solo lectura; se recalcula cada vez que se abre. */
 (function (g) {
   'use strict';
   const h = U.h;
@@ -35,20 +35,6 @@
         h('tr', { class: 'dim' }, h('td', { colspan: 2 }, 'Puertos sin salida asignada'), R.map(c => num(c.ports - c.outlets)), h('td', { class: 'num' }, U.fmt(sinSal))),
         h('tr', { class: 'total' }, h('td', { colspan: 2 }, 'TOTAL SALIDAS'), R.map(c => num(c.outlets)), h('td', { class: 'num' }, U.fmt(P.tot.outlets)))));
 
-    /* 3. canalización */
-    const canal = Object.values(P.canal).sort((a, b) => a.item.categoria.localeCompare(b.item.categoria) || a.item.descripcion.localeCompare(b.item.descripcion));
-    const sumCat = (rows, f) => rows.reduce((a, o) => a + f(o), 0);
-    const t3 = canal.length ? h('table', { class: 'tbl' }, th(['Categoría', 'Tipo', 'Marca / parte'].concat(roomCols.map(c => c + ' (m)'), ['Tramos', 'Total (m)', 'Piezas'])),
-      h('tbody', null, canal.map(o => h('tr', null, h('td', null, o.item.categoria), h('td', null, o.item.descripcion), h('td', { class: 'muted' }, [o.item.marca, o.item.parte].filter(x => x && x !== 'Por definir').join(' · ') || '—'),
-        R.map(c => num(o.per[c.room.id], 1)), num(o.tramos), h('td', { class: 'num strong' }, U.fmt(o.L, 1)), h('td', { class: 'num strong' }, o.piezas === null ? '—' : o.piezas + ' × ' + U.fmt(o.item.largoPieza, 2) + ' m'))),
-        h('tr', { class: 'total' }, h('td', { colspan: 3 }, 'TOTAL canalización'), R.map(c => num(sumCat(canal, o => o.per[c.room.id] || 0), 1)), num(sumCat(canal, o => o.tramos)), h('td', { class: 'num' }, U.fmt(sumCat(canal, o => o.L), 1)), h('td', null, '')))) : h('p', { class: 'empty' }, 'Aún no hay tramos de canasta o tubería registrados en los niveles.');
-
-    /* 4. cableado */
-    const cable = Object.values(P.cable).sort((a, b) => a.item.descripcion.localeCompare(b.item.descripcion));
-    const t4 = cable.length ? h('table', { class: 'tbl' }, th(['Tipo de cableado', 'Marca / parte'].concat(roomCols.map(c => c + ' (m)'), ['Cables', 'Neto (m)', 'Con reserva ' + (p.reservaCable || 0) + ' % (m)', 'Rollos / bobinas'])),
-      h('tbody', null, cable.map(o => h('tr', null, h('td', null, o.item.descripcion), h('td', { class: 'muted' }, [o.item.marca, o.item.parte].filter(x => x && x !== 'Por definir').join(' · ') || '—'),
-        R.map(c => num(o.per[c.room.id], 1)), num(o.cables), num(o.L, 1), h('td', { class: 'num strong' }, U.fmt(o.Lres, 1)), h('td', { class: 'num' }, o.piezas === null ? '—' : o.piezas + ' × ' + U.fmt(o.item.largoPieza, 0) + ' m'))))) : h('p', { class: 'empty' }, 'Aún no hay cableado asignado a los tramos.');
-
     /* 5. potencia */
     const t5 = h('table', { class: 'tbl' }, th(['Cuarto', 'Consumo (W)', 'PoE (W)', 'Carga UPS (W)', 'Calor (BTU/h)', 't.r.', 'Peso equipos (kg)', 'Cap. UPS (W)', '% UPS', 'Observación']),
       h('tbody', null, R.map(c => { const w = c.power; return h('tr', null, h('td', null, h('b', null, c.room.codigo)), num(w.consumo), num(w.poe), num(w.cargaUps), num(w.calorBTU), num(w.tr, 2), num(w.peso), num(w.capSum), h('td', { class: 'num' }, w.pctUps === null ? '–' : U.pct(w.pctUps)), h('td', { class: 'muted' }, [w.sinDato ? w.sinDato + ' equipo(s) sin dato' : '', w.pctUps > 0.8 ? 'UPS > 80 %' : ''].filter(Boolean).join(' · '))); }),
@@ -67,18 +53,14 @@
     root.appendChild(h('div', { class: 'stack memo' }, enc,
       UI.card('1. Resumen de cuartos', h('div', { class: 'table-wrap' }, t1)),
       UI.card('2. Salidas por tipo', h('div', { class: 'table-wrap' }, t2)),
-      UI.card('3. Canalización — resumen de tramos de canastas y tuberías', h('div', { class: 'table-wrap' }, t3)),
-      UI.card('4. Cableado', h('div', { class: 'table-wrap' }, t4)),
-      UI.card('5. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),
-      UI.card('6. Lista de materiales (rack, equipos y jacks)', [h('p', { class: 'hint' }, 'Incluye racks, organizadores, equipos de la lista, equipos fuera del rack y un jack por salida. No incluye espacios libres ni reservados.'), h('div', { class: 'table-wrap' }, t6)])));
+      UI.card('3. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),
+      UI.card('4. Lista de materiales (rack, equipos y jacks)', [h('p', { class: 'hint' }, 'Incluye racks, organizadores, equipos de la lista, equipos fuera del rack y un jack por salida. No incluye espacios libres ni reservados.'), h('div', { class: 'table-wrap' }, t6)])));
   }
 
   function exportBom(P) {
     const R = P.rooms;
     const rows = [['Categoría', 'Descripción', 'Marca', 'N.º de parte'].concat(R.map(c => c.room.codigo), ['Total'])];
     Object.values(P.bom).filter(o => o.item).sort((a, b) => a.item.categoria.localeCompare(b.item.categoria)).forEach(o => rows.push([o.item.categoria, o.item.descripcion, o.item.marca, o.item.parte].concat(R.map(c => o.per[c.room.id] || ''), [o.total])));
-    Object.values(P.canal).forEach(o => rows.push([o.item.categoria, o.item.descripcion + ' (m)', o.item.marca, o.item.parte].concat(R.map(c => o.per[c.room.id] || ''), [o.L])));
-    Object.values(P.cable).forEach(o => rows.push([o.item.categoria, o.item.descripcion + ' (m c/reserva)', o.item.marca, o.item.parte].concat(R.map(c => o.per[c.room.id] || ''), [o.Lres])));
     U.download('materiales.csv', U.csv(rows), 'text/csv;charset=utf-8');
   }
   function exportRooms(P) {

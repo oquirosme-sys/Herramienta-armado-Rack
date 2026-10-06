@@ -1,4 +1,4 @@
-/* Pestaña de un nivel / cuarto: rack y equipos, etiquetado de puertos y tramos de canalización.
+/* Pestaña de un nivel / cuarto: rack y equipos y etiquetado de puertos.
    Las celdas calculadas se actualizan con "bindings" (sin reconstruir la tabla) para no perder el foco al teclear. */
 (function (g) {
   'use strict';
@@ -30,19 +30,19 @@
       h('div', { class: 'no-print' }, UI.btn('Imprimir hoja', () => window.print(), 'small')));
 
     /* ---------- sub-pestañas ---------- */
-    const subs = [['rack', 'Rack y equipos'], ['etiquetado', 'Etiquetado de puertos'], ['tramos', 'Tramos (canastas y tuberías)']];
+    const subs = [['rack', 'Rack y equipos'], ['etiquetado', 'Etiquetado de puertos']];
     const paneHost = h('div', { class: 'pane' });
     const tabs = h('div', { class: 'subtabs no-print', role: 'tablist' });
     function showSub(k) {
       lastSub[roomId] = k; B.pane = [];
       [...tabs.children].forEach(b => b.setAttribute('aria-selected', b.dataset.k === k ? 'true' : 'false'));
       U.clear(paneHost);
-      paneHost.appendChild(k === 'rack' ? rackPane(room, B, refresh, root, roomId) : k === 'etiquetado' ? portsPane(room, B, refresh) : tramosPane(room, B, refresh));
+      paneHost.appendChild(k === 'rack' ? rackPane(room, B, refresh, root, roomId) : portsPane(room, B, refresh));
       refresh();
     }
     subs.forEach(([k, t]) => tabs.appendChild(h('button', { type: 'button', role: 'tab', 'data-k': k, onclick: () => showSub(k) }, t)));
     root.appendChild(h('div', { class: 'stack' }, head, tabs, paneHost));
-    showSub(lastSub[roomId] || 'rack');
+    showSub(lastSub[roomId] === 'etiquetado' ? 'etiquetado' : 'rack');
   }
 
   /* =====================================================================
@@ -227,11 +227,12 @@
     });
     const side = (on) => h('div', { class: 'elev-org' + (on ? ' on' : ''), title: on ? orgText : '' }, on ? h('span', null, orgText) : null);
     host.appendChild(h('div', { class: 'elev' }, nums, side(left), mid, side(right), nums.cloneNode(true)));
+    if (!left && !right) host.appendChild(h('p', { class: 'hint' }, 'Sin organizador vertical: elíjalo y su ubicación en "Datos del cuarto" para verlo en el alzado.'));
     if (C.rackQty > 1) host.appendChild(h('p', { class: 'hint' }, '× ' + C.rackQty + ' racks iguales (las cantidades de rack y organizadores ya se multiplican en materiales).'));
     const over = C.rows.filter(r => r.item && r.ru > 0 && r.inf < 1);
     if (over.length) host.appendChild(h('p', { class: 'status bad' }, '❌ ' + over.length + ' equipo(s) no caben en el rack.'));
     const used = [...new Set(C.rows.filter(r => r.item).map(r => r.item.categoria))];
-    host.appendChild(h('div', { class: 'legend' }, used.map(cn => { const it = C.rows.find(r => r.item && r.item.categoria === cn).item; return h('span', null, h('i', { style: { background: ix.colorOf(it) } }), cn); })));
+    host.appendChild(h('div', { class: 'legend' }, (left || right) ? h('span', null, h('i', { style: { background: '#8EA9DB' } }), 'Organizador vertical') : null, used.map(cn => { const it = C.rows.find(r => r.item && r.item.categoria === cn).item; return h('span', null, h('i', { style: { background: ix.colorOf(it) } }), cn); })));
   }
 
   /* =====================================================================
@@ -273,66 +274,6 @@
       host.appendChild(UI.card('', grid, null)); const card = host.lastChild; card.querySelector('.card-h h3').replaceWith(title);
     });
     return host;
-  }
-
-  /* =====================================================================
-     TRAMOS DE CANALIZACIÓN Y CABLEADO
-     ===================================================================== */
-  function tramosPane(room, B, refresh) {
-    const canalOpts = UI.itemOptions(Store.itemsByRole('canalizacion'), '— tipo —');
-    const cableOpts = UI.itemOptions(Store.itemsByRole('cableado'), '— sin cable —');
-    const tbody = h('tbody');
-    const sumHost = h('div', { class: 'stack' });
-    const warnNoCat = !Store.itemsByRole('canalizacion').length ? h('p', { class: 'status bad' }, 'No hay tipos de canasta/tubería en el catálogo. Pídale al administrador que los agregue.') : null;
-
-    function build() {
-      U.clear(tbody);
-      room.tramos.forEach((t, i) => {
-        const cTot = h('td', { class: 'num strong' });
-        const tr = h('tr', null, h('td', { class: 'num' }, i + 1),
-          h('td', null, UI.input(t, 'nombre', { class: 'w-code', label: 'Tramo' })), h('td', null, UI.input(t, 'desde', { label: 'Desde' })), h('td', null, UI.input(t, 'hasta', { label: 'Hasta' })),
-          h('td', { class: 'c-eq' }, UI.select(canalOpts, t.canalId, v => { t.canalId = v; Store.save(); refresh(); }, { label: 'Canalización' })),
-          h('td', null, UI.input(t, 'longitud', { type: 'number', min: 0, step: 0.1, class: 'w-num', after: refresh, label: 'Longitud (m)' })),
-          h('td', { class: 'c-eq' }, UI.select(cableOpts, t.cableId, v => { t.cableId = v; Store.save(); refresh(); }, { label: 'Cableado' })),
-          h('td', null, UI.input(t, 'ncables', { type: 'number', min: 0, step: 1, class: 'w-num', after: refresh, label: 'Cables' })),
-          cTot, h('td', null, UI.input(t, 'notas', { label: 'Notas' })),
-          h('td', { class: 'row-actions' }, UI.iconBtn('▲', 'Subir', () => mv(i, -1)), UI.iconBtn('▼', 'Bajar', () => mv(i, 1)), UI.iconBtn('⧉', 'Duplicar', () => { const c = U.clone(t); c.id = U.uid(); c.nombre = nextName(); room.tramos.splice(i + 1, 0, c); Store.save(); build(); refresh(); }), UI.iconBtn('✕', 'Quitar', () => { room.tramos.splice(i, 1); Store.save(); build(); refresh(); }, 'danger')));
-        B.pane.push(c => { const x = c.tramos.find(y => y.t === t); cTot.textContent = x && x.cableLres ? U.fmt(x.cableLres, 1) : ''; });
-        tbody.appendChild(tr);
-      });
-    }
-    const mv = (i, d) => { const a = room.tramos, j = i + d; if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; Store.save(); build(); refresh(); };
-    const nextName = () => 'T-' + U.pad(room.tramos.length + 1, 2);
-    const add = () => {
-      const last = room.tramos[room.tramos.length - 1] || {};
-      room.tramos.push({ id: U.uid(), nombre: nextName(), desde: '', hasta: '', canalId: last.canalId || '', longitud: null, cableId: last.cableId || '', ncables: last.ncables || null, notas: '' });
-      Store.save(); build(); refresh();
-    };
-    build();
-
-    const sumTables = c => {
-      U.clear(sumHost);
-      const canal = Object.values(c.canalPor), cable = Object.values(c.cablePor);
-      const totL = canal.reduce((a, o) => a + o.L, 0);
-      sumHost.appendChild(h('div', { class: 'grid cols-2' },
-        UI.card('Resumen de canalización (este nivel)', canal.length ? h('table', { class: 'tbl compact' },
-          h('thead', null, h('tr', null, ['Tipo', 'Marca', 'Tramos', 'Longitud (m)', 'Piezas'].map(t => h('th', null, t)))),
-          h('tbody', null, canal.map(o => h('tr', null, h('td', null, o.item.descripcion), h('td', null, o.item.marca), h('td', { class: 'num' }, o.tramos), h('td', { class: 'num' }, U.fmt(o.L, 1)),
-            h('td', { class: 'num' }, o.item.largoPieza > 0 ? Math.ceil(o.L / o.item.largoPieza - 1e-9) + ' × ' + U.fmt(o.item.largoPieza, 2) + ' m' : '—'))),
-            h('tr', { class: 'total' }, h('td', { colspan: 3 }, 'TOTAL'), h('td', { class: 'num' }, U.fmt(totL, 1)), h('td', null, '')))) : h('p', { class: 'empty' }, 'Sin tramos.')),
-        UI.card('Resumen de cableado (este nivel)', cable.length ? h('table', { class: 'tbl compact' },
-          h('thead', null, h('tr', null, ['Tipo', 'Cables', 'Longitud (m)', 'Con reserva ' + (Store.project.reservaCable || 0) + ' %'].map(t => h('th', null, t)))),
-          h('tbody', null, cable.map(o => h('tr', null, h('td', null, o.item.descripcion), h('td', { class: 'num' }, o.cables), h('td', { class: 'num' }, U.fmt(o.L, 1)), h('td', { class: 'num strong' }, U.fmt(o.Lres, 1)))))) : h('p', { class: 'empty' }, 'Sin cableado asignado.'))));
-    };
-    B.pane.push(sumTables);
-
-    return h('div', { class: 'stack' },
-      UI.card('Tramos de canalización y cableado', [
-        warnNoCat,
-        h('p', { class: 'hint' }, 'Un tramo es un recorrido de canasta o tubería (desde → hasta). La longitud del cableado por tramo = longitud × N.º de cables, más la reserva definida en Proyecto.'),
-        h('div', { class: 'table-wrap' }, h('table', { class: 'tbl eq' }, h('thead', null, h('tr', null, ['#', 'Tramo', 'Desde', 'Hasta', 'Canasta / tubería', 'Long. (m)', 'Cableado', 'N.º cables', 'Cable (m, c/reserva)', 'Notas', ''].map(t => h('th', null, t)))), tbody)),
-        h('div', { class: 'toolbar no-print' }, UI.btn('+ Agregar tramo', add, 'primary')),
-      ]), sumHost);
   }
 
   g.RoomView = { render };
