@@ -1,0 +1,147 @@
+/* Motor de cálculo (puro, sin DOM). Reproduce la lógica de las hojas MUESTRA / Resumen del Excel:
+   posición en el rack, etiquetado de puertos, lista de materiales, potencia y calor,
+   más los tramos de canalización (canastas / tuberías) y cableado. */
+(function (g) {
+  'use strict';
+  const pad = (n, w) => String(n).padStart(w, '0');
+  const NO_BOM = ['libre', 'reservado'];
+
+  function index(cat) {
+    const byId = {}, role = {}, color = {};
+    cat.items.forEach(i => { byId[i.id] = i; });
+    cat.categorias.forEach(c => { role[c.nombre] = c.rol; color[c.nombre] = c.color; });
+    return {
+      byId,
+      roleOf: i => (i ? (role[i.categoria] || 'equipo') : ''),
+      colorOf: i => (i ? (color[i.categoria] || '#E7E6E6') : '#fff'),
+    };
+  }
+  const panelLetters = n => String.fromCharCode(65 + Math.floor((n - 1) / 26)) + String.fromCharCode(65 + ((n - 1) % 26));
+  const orgQty = u => (u === 'Ambos lados' ? 2 : (u === 'Lado izquierdo' || u === 'Lado derecho') ? 1 : 0);
+
+  function calcRoom(room, cat, project, ix) {
+    ix = ix || index(cat);
+    const rack = ix.byId[room.rackId];
+    const rackQty = Math.max(1, Number(room.rackQty) || 1);
+    const totalRU = rack && rack.ru > 0 ? rack.ru : 45;
+    const rows = [], panels = [], counters = {}, outletsByType = {};
+    let cum = 0, libreRU = 0, panelN = 0, outlets = 0, ports = 0;
+    let consumo = 0, peso = 0, capSum = 0, capMax = 0, upsN = 0, sinDato = 0;
+    const bom = {}; const add = (id, q) => { if (q) bom[id] = (bom[id] || 0) + q; };
+
+    (room.equipos || []).forEach((eq, idx) => {
+      const item = ix.byId[eq.itemId];
+      const row = { eq, item, idx, role: item ? ix.roleOf(item) : '', ru: 0, sup: null, inf: null };
+      rows.push(row);
+      if (!item) return;
+      const ru = item.ru > 0 ? item.ru : 0;
+      row.ru = ru;
+      if (ru > 0) { row.sup = totalRU - cum; row.inf = row.sup - ru + 1; }
+      cum += ru;
+      if (row.role === 'libre') libreRU += ru;
+      if (!NO_BOM.includes(row.role)) {
+        add(item.id, 1);
+        if (item.consumo === null || item.consumo === undefined) sinDato++;
+      }
+      consumo += item.consumo || 0;
+      peso += item.peso || 0;
+      if (item.capacidad) { capSum += item.capacidad; capMax = Math.max(capMax, item.capacidad); }
+      if (row.role === 'ups') upsN++;
+
+      if (row.role === 'panel') {
+        panelN++;
+        const np = item.puertos || 0;
+        const used = (eq.salidas === null || eq.salidas === undefined || eq.salidas === '') ? np : Math.min(np, Number(eq.salidas) || 0);
+        const code = room.codigo + '-' + panelLetters(panelN);
+        const P = { row, eq, code, np, used, tipo: eq.tipo || '', ports: [], labeled: 0, blocks: Math.ceil(np / 24) };
+        for (let p = 1; p <= np; p++) {
+          const ov = (room.portTipos || {})[eq.id + ':' + p] || '';
+          const t = ov ? (ov === '-' ? '' : ov) : (p <= used ? P.tipo : '');
+          let salida = '';
+          if (t) {
+            counters[t] = (counters[t] || 0) + 1;
+            salida = t + '-' + pad(counters[t], 3);
+            outletsByType[t] = (outletsByType[t] || 0) + 1;
+            P.labeled++; outlets++;
+          }
+          P.ports.push({ n: p, ov, tipo: t, salida, label: code + '-' + pad(p, 2) });
+        }
+        ports += np;
+        row.panel = P; panels.push(P);
+      }
+    });
+
+    // Materiales propios del cuarto
+    const orgv = ix.byId[room.orgVertId];
+    const nOrg = orgv ? orgQty(room.orgVertUbic) * rackQty : 0;
+    if (rack) add(rack.id, rackQty);
+    if (orgv) add(orgv.id, nOrg);
+    if (project.jackId && outlets > 0) add(project.jackId, outlets);
+    (room.fuera || []).forEach(f => {
+      const it = ix.byId[f.itemId];
+      if (it && !NO_BOM.includes(ix.roleOf(it))) add(it.id, Number(f.cant) || 0);
+    });
+
+    // Vista del rack (de arriba hacia abajo)
+    const elevation = [];
+    let n = totalRU;
+    while (n >= 1) {
+      const r = rows.find(x => x.inf !== null && x.inf <= n && x.sup >= n);
+      if (r) { const to = Math.max(r.inf, 1); elevation.push({ row: r, from: n, to }); n = to - 1; }
+      else { elevation.push({ row: null, from: n, to: n }); n--; }
+    }
+
+    const ocupados = cum - libreRU;
+    const poe = Number(room.poeW) || 0;
+    const cargaUps = consumo + poe;
+
+    // Tramos de canalización y cableado
+    const reserva = 1 + (Number(project.reservaCable) || 0) / 100;
+    const tramos = (room.tramos || []).map(t => {
+      const canal = ix.byId[t.canalId], cable = ix.byId[t.cableId];
+      const L = Number(t.longitud) || 0, nc = Number(t.ncables) || 0;
+      return { t, canal, cable, L, nc, cableL: L * nc, cableLres: L * nc * reserva };
+    });
+    const canalPor = {}, cablePor = {};
+    tramos.forEach(x => {
+      if (x.canal) { const o = canalPor[x.canal.id] || (canalPor[x.canal.id] = { item: x.canal, tramos: 0, L: 0 }); o.tramos++; o.L += x.L; }
+      if (x.cable && x.nc > 0) { const o = cablePor[x.cable.id] || (cablePor[x.cable.id] = { item: x.cable, cables: 0, L: 0, Lres: 0 }); o.cables += x.nc; o.L += x.cableL; o.Lres += x.cableLres; }
+    });
+
+    return {
+      room, rack, rackQty, totalRU, rows, panels, elevation, outlets, ports, outletsByType, bom,
+      ocupados, libres: totalRU - ocupados, usoRU: cum, excede: cum > totalRU,
+      pctRack: totalRU ? ocupados / totalRU : 0,
+      pctPanel: ports ? outlets / ports : null,
+      power: {
+        consumo, poe, cargaUps, calorBTU: Math.round(consumo * 3.412), tr: consumo * 3.412 / 12000,
+        peso, capSum, upsN, sinDato,
+        pctUps: capSum ? cargaUps / capSum : null,
+        pctUno: capMax ? cargaUps / capMax : null,
+      },
+      tramos, canalPor, cablePor,
+    };
+  }
+
+  function calcProject(project, cat) {
+    const ix = index(cat);
+    const rooms = (project.niveles || []).map(r => calcRoom(r, cat, project, ix));
+    const out = { ix, rooms, outlets: {}, bom: {}, canal: {}, cable: {}, tot: { ocupados: 0, totalRU: 0, panels: 0, ports: 0, outlets: 0, consumo: 0, calor: 0, peso: 0 } };
+    rooms.forEach(c => {
+      const id = c.room.id;
+      out.tot.ocupados += c.ocupados; out.tot.totalRU += c.totalRU * c.rackQty;
+      out.tot.panels += c.panels.length; out.tot.ports += c.ports; out.tot.outlets += c.outlets;
+      out.tot.consumo += c.power.consumo; out.tot.calor += c.power.calorBTU; out.tot.peso += c.power.peso;
+      for (const t in c.outletsByType) out.outlets[t] = (out.outlets[t] || 0) + c.outletsByType[t];
+      for (const k in c.bom) { const o = out.bom[k] || (out.bom[k] = { item: ix.byId[k], total: 0, per: {} }); o.total += c.bom[k]; o.per[id] = c.bom[k]; }
+      for (const k in c.canalPor) { const o = out.canal[k] || (out.canal[k] = { item: c.canalPor[k].item, tramos: 0, L: 0, per: {} }); o.tramos += c.canalPor[k].tramos; o.L += c.canalPor[k].L; o.per[id] = c.canalPor[k].L; }
+      for (const k in c.cablePor) { const o = out.cable[k] || (out.cable[k] = { item: c.cablePor[k].item, cables: 0, L: 0, Lres: 0, per: {} }); o.cables += c.cablePor[k].cables; o.L += c.cablePor[k].L; o.Lres += c.cablePor[k].Lres; o.per[id] = c.cablePor[k].Lres; }
+    });
+    const pieces = (L, it) => (it && it.largoPieza > 0 ? Math.ceil(L / it.largoPieza - 1e-9) : null);
+    for (const k in out.canal) out.canal[k].piezas = pieces(out.canal[k].L, out.canal[k].item);
+    for (const k in out.cable) out.cable[k].piezas = pieces(out.cable[k].Lres, out.cable[k].item);
+    return out;
+  }
+
+  g.Calc = { index, calcRoom, calcProject, panelLetters, orgQty };
+})(typeof window !== 'undefined' ? window : globalThis);
