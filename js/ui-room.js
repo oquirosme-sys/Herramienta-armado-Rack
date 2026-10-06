@@ -27,6 +27,7 @@
     const head = h('div', { class: 'room-head' },
       h('div', null, h('h2', null, 'Nivel ', h('span', { class: 'code' }, room.codigo)), h('p', { class: 'muted' }, room.descripcion || 'Sin descripción')),
       h('div', { class: 'kpis' }, kRU.el, kPct.el, kPP.el, kOut.el, kPPpct.el, kW.el),
+      h('p', { class: 'print-meta' }, [Store.project.nombre, Store.project.numero && 'Proyecto N.º ' + Store.project.numero, Store.project.ubicacion, Store.project.revision && 'Rev. ' + Store.project.revision, Store.project.fecha, Store.project.elaboro && 'Elaboró: ' + Store.project.elaboro].filter(Boolean).join('  ·  ')),
       h('div', { class: 'no-print' }, UI.btn('Imprimir hoja', () => window.print(), 'small')));
 
     /* ---------- sub-pestañas ---------- */
@@ -87,12 +88,13 @@
       const sel = UI.select(eqOpts, eq.itemId, v => { eq.itemId = v; const it = Store.item(v); if (!it || Store.roleOfCat(it.categoria) !== 'panel') { eq.tipo = ''; eq.salidas = null; eq.mas = []; tipoSel.value = ''; salInp.value = ''; } Store.save(); refresh(); }, { label: 'Equipo' });
       const tipoSel = UI.select(tipos, eq.tipo || '', v => { eq.tipo = v; Store.save(); refresh(); }, { label: 'Tipo de salida', class: 'w-tipo' });
       const salInp = UI.input(eq, 'salidas', { type: 'number', min: 0, step: 1, class: 'w-num', label: 'Salidas', after: refresh });
+      const ptxt = h('span', { class: 'print-txt' });
       const notas = UI.input(eq, 'notas', { label: 'Notas' });
       const masBtn = h('button', { type: 'button', class: 'btn small more', title: 'Agregar otros tipos de salida en este mismo panel', onclick: () => masDialog(eq, refresh, masBtn) });
       const masTxt = () => { masBtn.textContent = (eq.mas && eq.mas.length) ? '+' + eq.mas.length : '+ tipo'; };
       masTxt();
       const tr = h('tr', null,
-        h('td', { class: 'num' }, i + 1), h('td', { class: 'c-eq' }, sel), cPart, cRU, cPt, cSup, cInf, cPanel,
+        h('td', { class: 'num' }, i + 1), h('td', { class: 'c-eq' }, sel, ptxt), cPart, cRU, cPt, cSup, cInf, cPanel,
         h('td', null, tipoSel), h('td', { class: 'nowrap' }, salInp, masBtn), cPct, h('td', null, notas),
         h('td', { class: 'row-actions' },
           UI.iconBtn('▲', 'Subir', () => move(i, -1)), UI.iconBtn('▼', 'Bajar', () => move(i, 1)),
@@ -100,6 +102,7 @@
       B.pane.push(c => {
         const r = c.rows.find(x => x.eq === eq);
         const it = r && r.item, isP = !!(r && r.panel);
+        ptxt.textContent = it ? it.descripcion : '';
         cPart.textContent = it ? it.parte : ''; cRU.textContent = it ? r.ru : ''; cPt.textContent = isP ? r.panel.np : '';
         const fuera = it && r.ru > 0 && r.inf < 1;
         cSup.textContent = r && r.sup !== null ? r.sup : ''; cInf.textContent = r && r.inf !== null ? r.inf : '';
@@ -138,7 +141,7 @@
         const part = h('td', { class: 'muted' });
         const sel = UI.select(fuOpts, f.itemId, v => { f.itemId = v; part.textContent = (Store.item(v) || {}).parte || ''; Store.save(); refresh(); }, { label: 'Equipo fuera del rack' });
         part.textContent = (Store.item(f.itemId) || {}).parte || '';
-        fbody.appendChild(h('tr', null, h('td', { class: 'num' }, i + 1), h('td', { class: 'c-eq' }, sel), part,
+        fbody.appendChild(h('tr', null, h('td', { class: 'num' }, i + 1), h('td', { class: 'c-eq' }, sel, h('span', { class: 'print-txt' }, (Store.item(f.itemId) || {}).descripcion || '')), part,
           h('td', null, UI.input(f, 'cant', { type: 'number', min: 0, step: 1, class: 'w-num', after: refresh })), h('td', null, UI.input(f, 'notas')),
           h('td', { class: 'row-actions' }, UI.iconBtn('✕', 'Quitar', () => { room.fuera.splice(i, 1); Store.save(); buildOut(); refresh(); }, 'danger'))));
       });
@@ -210,20 +213,19 @@
 
   function drawElevation(host, C, room) {
     U.clear(host);
-    const RU = 20; // px por RU
-    const ix = Calc.index(Store.catalog);
+        const ix = Calc.index(Store.catalog);
     const orgOn = C.room.orgVertId ? (C.room.orgVertUbic) : 'Sin organizador';
     const orgItem = ix.byId[room.orgVertId];
     const orgText = orgItem ? 'ORGANIZADOR VERTICAL ' + orgItem.parte : '';
     const left = orgOn === 'Ambos lados' || orgOn === 'Lado izquierdo', right = orgOn === 'Ambos lados' || orgOn === 'Lado derecho';
     const nums = h('div', { class: 'elev-nums' }), mid = h('div', { class: 'elev-rack' });
     C.elevation.forEach(b => {
-      const hgt = (b.from - b.to + 1) * RU;
-      nums.appendChild(h('div', { class: 'elev-n', style: { height: hgt + 'px' } }, b.from === b.to ? b.from : b.from + '–' + b.to));
-      if (!b.row) { mid.appendChild(h('div', { class: 'elev-b empty', style: { height: hgt + 'px' } })); return; }
+      const hgt = (b.from - b.to + 1);
+      nums.appendChild(h('div', { class: 'elev-n', style: { height: 'calc(var(--ru) * ' + hgt + ')' } }, b.from === b.to ? b.from : b.from + '–' + b.to));
+      if (!b.row) { mid.appendChild(h('div', { class: 'elev-b empty', style: { height: 'calc(var(--ru) * ' + hgt + ')' } })); return; }
       const it = b.row.item, role = b.row.role;
       const label = b.row.panel ? 'Patch panel ' + b.row.panel.code + ' · ' + b.row.panel.np + ' p' + (b.row.panel.tipo ? ' · ' + b.row.panel.tipo : '') : it.descripcion;
-      mid.appendChild(h('div', { class: 'elev-b ' + role, style: { height: hgt + 'px', background: ix.colorOf(it) }, title: it.descripcion + (it.marca ? ' · ' + it.marca : '') + ' · ' + b.row.ru + ' RU' }, h('span', null, label)));
+      mid.appendChild(h('div', { class: 'elev-b ' + role, style: { height: 'calc(var(--ru) * ' + hgt + ')', background: ix.colorOf(it) }, title: it.descripcion + (it.marca ? ' · ' + it.marca : '') + ' · ' + b.row.ru + ' RU' }, h('span', null, label)));
     });
     const side = (on) => h('div', { class: 'elev-org' + (on ? ' on' : ''), title: on ? orgText : '' }, on ? h('span', null, orgText) : null);
     host.appendChild(h('div', { class: 'elev' }, nums, side(left), mid, side(right), nums.cloneNode(true)));
@@ -276,5 +278,5 @@
     return host;
   }
 
-  g.RoomView = { render };
+  g.RoomView = { render, drawElevation };
 })(window);

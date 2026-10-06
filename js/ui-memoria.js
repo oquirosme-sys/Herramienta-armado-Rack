@@ -35,7 +35,8 @@
         h('tr', { class: 'dim' }, h('td', { colspan: 2 }, 'Puertos sin salida asignada'), R.map(c => num(c.ports - c.outlets)), h('td', { class: 'num' }, U.fmt(sinSal))),
         h('tr', { class: 'total' }, h('td', { colspan: 2 }, 'TOTAL SALIDAS'), R.map(c => num(c.outlets)), h('td', { class: 'num' }, U.fmt(P.tot.outlets)))));
 
-    /* 5. potencia */
+    const sumCat = (rows, f) => rows.reduce((a, o) => a + f(o), 0);
+    /* potencia */
     const t5 = h('table', { class: 'tbl' }, th(['Cuarto', 'Consumo (W)', 'PoE (W)', 'Carga UPS (W)', 'Calor (BTU/h)', 't.r.', 'Peso equipos (kg)', 'Cap. UPS (W)', '% UPS', 'Observación']),
       h('tbody', null, R.map(c => { const w = c.power; return h('tr', null, h('td', null, h('b', null, c.room.codigo)), num(w.consumo), num(w.poe), num(w.cargaUps), num(w.calorBTU), num(w.tr, 2), num(w.peso), num(w.capSum), h('td', { class: 'num' }, w.pctUps === null ? '–' : U.pct(w.pctUps)), h('td', { class: 'muted' }, [w.sinDato ? w.sinDato + ' equipo(s) sin dato' : '', w.pctUps > 0.8 ? 'UPS > 80 %' : ''].filter(Boolean).join(' · '))); }),
         h('tr', { class: 'total' }, h('td', null, 'TOTAL'), num(P.tot.consumo), num(sumCat(R, c => c.power.poe)), num(sumCat(R, c => c.power.cargaUps)), num(P.tot.calor), num(P.tot.calor / 12000, 2), num(P.tot.peso), h('td', { colspan: 3 }, ''))));
@@ -52,9 +53,13 @@
 
     root.appendChild(h('div', { class: 'stack memo' }, enc,
       UI.card('1. Resumen de cuartos', h('div', { class: 'table-wrap' }, t1)),
-      UI.card('2. Salidas por tipo', h('div', { class: 'table-wrap' }, t2)),
-      UI.card('3. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),
-      UI.card('4. Lista de materiales (rack, equipos y jacks)', [h('p', { class: 'hint' }, 'Incluye racks, organizadores, equipos de la lista, equipos fuera del rack y un jack por salida. No incluye espacios libres ni reservados.'), h('div', { class: 'table-wrap' }, t6)])));
+      UI.card('2. Vista de cada rack', h('div', { class: 'elev-grid' }, R.map(c => {
+        const host = h('div', { class: 'elev-host' }); RoomView.drawElevation(host, c, c.room);
+        return h('div', { class: 'elev-item' }, h('h4', null, c.room.codigo + (c.room.descripcion ? ' — ' + c.room.descripcion : '')), h('p', { class: 'muted' }, (c.rack ? c.rack.descripcion : 'Sin rack') + ' · ' + c.ocupados + ' / ' + c.totalRU + ' RU (' + U.pct(c.pctRack) + ')'), host);
+      }))),
+      UI.card('3. Salidas por tipo', h('div', { class: 'table-wrap' }, t2)),
+      UI.card('4. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),
+      UI.card('5. Lista de materiales (rack, equipos y jacks)', [h('p', { class: 'hint' }, 'Incluye racks, organizadores, equipos de la lista, equipos fuera del rack y un jack por salida. No incluye espacios libres ni reservados.'), h('div', { class: 'table-wrap' }, t6)])));
   }
 
   function exportBom(P) {
