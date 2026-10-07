@@ -151,5 +151,18 @@
     return out;
   }
 
-  g.Calc = { index, calcRoom, calcProject, panelLetters, orgQty };
+  /** Bloques de 24 puertos por panel (formato de la hoja de etiquetado del Excel). */
+  function portBlocks(C) {
+    const out = [];
+    C.panels.forEach(P => {
+      for (let b = 0; b < P.blocks; b++) {
+        const from = b * 24 + 1, to = Math.min(P.np, from + 23), ports = P.ports.slice(from - 1, to);
+        const lab = ports.filter(o => o.tipo).length, tipos = [...new Set(ports.filter(o => o.tipo).map(o => o.tipo))].join('/');
+        out.push({ P, from, to, ports, title: 'Panel ' + P.code + '  (puertos ' + from + '-' + to + ')' + (tipos ? '  · ' + tipos : '') + '  · ' + Math.round(ports.length ? lab / ports.length * 100 : 0) + ' %' });
+      }
+    });
+    return out;
+  }
+
+  g.Calc = { index, calcRoom, calcProject, panelLetters, orgQty, portBlocks };
 })(typeof window !== 'undefined' ? window : globalThis);

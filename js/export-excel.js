@@ -136,13 +136,25 @@
       if (fu.length) { q += 1; s.set(q, 6, 'Equipos fuera del rack', { b: 1, border: false }); q++; hdr(s, q, 6, ['#', 'Equipo', 'N.º de parte', 'Cant.']); q++; fu.forEach((f, i) => { const it = ix.byId[f.itemId]; s.set(q, 6, i + 1, C); s.set(q, 7, it.descripcion, W); s.set(q, 8, it.parte, {}); s.set(q, 9, f.cant, C); q++; }); }
       [4, 50, 22, 5, 7, 7, 10, 11, 10, 26].forEach((w, i) => s.width(6 + i, w));
 
-      // etiquetado (lista plana)
+      // etiquetado: bloques de 24 puertos, 4 por fila (formato de la hoja del Excel original)
       if (c.panels.length) {
-        const e = mk('Etiq ' + room.codigo); const rows = [['Cuarto', 'Panel', 'Puerto', 'Etiqueta', 'Tipo', 'Salida']];
-        c.panels.forEach(Pn => Pn.ports.forEach(o => rows.push([room.codigo, Pn.code, U.pad(o.n, 2), o.label, o.tipo, o.salida])));
-        hdr(e, 0, 0, rows[0]); rows.slice(1).forEach((row, i) => row.forEach((v, k) => e.set(1 + i, k, v, k === 0 || k >= 2 ? C : {}))); e.autofilter(0, 0, rows.length - 1, 5);
-        [9, 11, 8, 14, 7, 11].forEach((w, i) => e.width(i, w));
-        rows.slice(1).forEach(x => todas.push(x));
+        const e = mk('Etiq ' + room.codigo), GREEN = { b: 1, bg: '#00B050', color: '#FFFFFF', al: 'center' }, bl = Calc.portBlocks(c), NB = 4, CW = 6;
+        e.set(0, 0, 'ETIQUETADO DE PUERTOS — nivel ' + room.codigo + '   (patch panels de cobre, en el orden del rack)', { b: 1, bg: '#00B050', color: '#FFFFFF', border: false, sz: 11 });
+        for (let k = 1; k < NB * CW - 1; k++) e.set(0, k, '', { bg: '#00B050', border: false });
+        e.merge(0, 0, 0, NB * CW - 2);
+        e.set(1, 0, 'El tipo de salida viene del panel (lista de equipos). Etiqueta = Cuarto-Panel-Puerto. La etiqueta en la salida del puesto de trabajo es la misma que en el puerto del rack.', { border: false, sz: 8 });
+        for (let i = 0; i < bl.length; i++) {
+          const band = Math.floor(i / NB), col = (i % NB) * CW, r0 = 3 + band * 27, B = bl[i];
+          for (let k = 1; k < 5; k++) e.set(r0, col + k, '', GREEN);
+          e.set(r0, col, B.title, GREEN); e.merge(r0, col, r0, col + 4);
+          hdr(e, r0 + 1, col, ['Tipo', 'Salida', 'Panel', 'Puerto', 'Etiqueta']);
+          for (let k = 0; k < 24; k++) {
+            const o = B.ports[k], row = r0 + 2 + k;
+            [o ? o.tipo : '', o ? o.salida : '', o ? B.P.code : '', o ? U.pad(o.n, 2) : '', o ? o.label : ''].forEach((v, j) => e.set(row, col + j, v, o ? C : { bg: '#F2F2F2' }));
+          }
+        }
+        for (let k = 0; k < NB; k++) { [7, 10, 10, 8, 14].forEach((w, j) => e.width(k * CW + j, w)); e.width(k * CW + 5, 3); }
+        c.panels.forEach(Pn => Pn.ports.forEach(o => todas.push([room.codigo, Pn.code, U.pad(o.n, 2), o.label, o.tipo, o.salida])));
       }
     });
 

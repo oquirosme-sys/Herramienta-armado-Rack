@@ -60,22 +60,17 @@
     return h3('Equipos fuera del rack') + table([tr(['#', 'Equipo', 'N.º de parte', 'Cant.', 'Notas'].map(t => th(t)))].concat(list.map((f, i) => { const it = ix.byId[f.itemId]; return tr([td(i + 1, { al: 'center' }), td(it.descripcion), td(it.parte), td(f.cant, { al: 'center' }), td(f.notas || '')]); })));
   }
 
-  /** Etiquetado de un panel: bloques de 24 puertos, de a dos bloques por banda. */
-  function panelTable(P) {
-    const out = [];
-    out.push(h3('Panel ' + P.code + ' — ' + P.np + ' puertos' + (P.tipo ? ' — tipo ' + P.tipo : '') + ' — ' + P.labeled + ' salidas' + (P.np ? ' (' + Math.round(P.labeled / P.np * 100) + ' % de llenado)' : '')));
-    for (let b = 0; b < P.blocks; b += 2) {
-      const two = b + 1 < P.blocks;
-      const head = ['Puerto', 'Etiqueta', 'Salida'].map(t => th(t)); if (two) head.push(th(''), ...['Puerto', 'Etiqueta', 'Salida'].map(t => th(t)));
-      const rows = [tr(head)];
-      for (let i = 0; i < 24; i++) {
-        const cell = n => { const o = P.ports[n - 1]; return o ? [td(U.pad(n, 2), { al: 'center' }), td(o.label), td(o.salida || '—', { al: 'center' })] : [td(''), td(''), td('')]; };
-        const a = b * 24 + i + 1, c = (b + 1) * 24 + i + 1;
-        if (a > P.np && (!two || c > P.np)) break;
-        const cells = cell(a); if (two) cells.push(td('', { st: 'border:none;', w: '0.4cm' }), ...cell(c));
-        rows.push(tr(cells));
-      }
-      out.push(table(rows)); out.push('<p style="margin:3pt 0">&nbsp;</p>');
+  /** Etiquetado: bloques de 24 puertos, 4 por fila (mismo formato que la hoja del Excel original). */
+  function labelBands(C) {
+    const bl = Calc.portBlocks(C), NB = 4, out = [], GREEN = '#00B050';
+    const wd = ['0.9cm', '1.4cm', '1.5cm', '1cm', '2cm'];
+    for (let i = 0; i < bl.length; i += NB) {
+      const band = bl.slice(i, i + NB), rows = [], gap = () => td('', { w: '0.25cm', st: 'border:none;' });
+      const rep = f => band.map((B, k) => (k ? [gap()] : []).concat(f(B))).reduce((a, x) => a.concat(x), []);
+      rows.push(tr(rep(B => [td('<b>' + esc(B.title) + '</b>', { raw: true, cs: 5, bg: GREEN, al: 'center', st: 'color:#FFFFFF;' })])));
+      rows.push(tr(rep(() => ['Tipo', 'Salida', 'Panel', 'Puerto', 'Etiqueta'].map((t, j) => th(t, { w: wd[j] })))));
+      for (let r = 0; r < 24; r++) rows.push(tr(rep(B => { const o = B.ports[r]; return o ? [td(o.tipo, { al: 'center' }), td(o.salida, { al: 'center' }), td(B.P.code, { al: 'center' }), td(U.pad(o.n, 2), { al: 'center' }), td(o.label, { al: 'center' })] : [0, 1, 2, 3, 4].map(() => td('', { bg: '#F2F2F2' })); })));
+      out.push('<table border="1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;table-layout:fixed;font-size:6.5pt;">' + rows.join('') + '</table><p style="margin:3pt 0">&nbsp;</p>');
     }
     return out.join('');
   }
@@ -93,8 +88,8 @@
     if (C.panels.length) {
       s.push('<br style="page-break-before:always" clear="all">');
       s.push(h2('Etiquetado de puertos — nivel ' + room.codigo));
-      s.push(p('Formato de etiqueta: [Cuarto]-[Panel]-[Puerto]. La etiqueta en la salida del puesto de trabajo es la misma que en el puerto del rack.'));
-      C.panels.forEach(P => s.push(panelTable(P)));
+      s.push(p('El tipo de salida viene del panel (lista de equipos). Etiqueta = Cuarto-Panel-Puerto. La etiqueta en la salida del puesto de trabajo es la misma que en el puerto del rack.'));
+      s.push(labelBands(C));
     }
     return s.join('');
   }
