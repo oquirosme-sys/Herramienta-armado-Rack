@@ -159,3 +159,4 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
   h2 { font-size: 14pt; } .kpi { padding: .15rem .4rem; min-width: 0; } .kpi b { font-size: 9pt; }
   .card { border-color: #bbb; }
 }
+.toolbar-inline { display: flex; gap: .4rem; }

@@ -19,7 +19,7 @@
     const enc = h('div', { class: 'memo-head' },
       h('div', null, h('h2', null, 'Memoria de cálculo'), h('p', { class: 'muted' }, 'Etiquetado y racks de telecomunicaciones')),
       h('dl', null, [['Proyecto', p.nombre], ['Proyecto #', p.numero], ['Ubicación', p.ubicacion], ['Fecha', p.fecha], ['Elaboró', p.elaboro], ['Revisión', p.revision]].map(([k, v]) => [h('dt', null, k), h('dd', null, v || '—')])),
-      h('div', { class: 'toolbar no-print' }, UI.btn('Imprimir / PDF', () => window.print(), 'primary'), UI.btn('Exportar materiales (CSV)', () => exportBom(P)), UI.btn('Exportar resumen de cuartos (CSV)', () => exportRooms(P))));
+      h('div', { class: 'toolbar no-print' }, UI.btn('Imprimir / PDF', () => window.print()), UI.btn('Exportar materiales (CSV)', () => exportBom(P)), UI.btn('Exportar resumen a Word (Revit / CAD)', () => ExportDoc.download(), 'primary')));
 
     /* 1. cuartos */
     const t1 = h('table', { class: 'tbl' }, th(['Cuarto', 'Descripción', 'Rack / gabinete', 'RU ocupados', 'RU libres', '% llenado rack', 'Patch panels', 'Puertos', 'Salidas', '% llenado PP']),
@@ -68,11 +68,5 @@
     Object.values(P.bom).filter(o => o.item).sort((a, b) => a.item.categoria.localeCompare(b.item.categoria)).forEach(o => rows.push([o.item.categoria, o.item.descripcion, o.item.marca, o.item.parte].concat(R.map(c => o.per[c.room.id] || ''), [o.total])));
     U.download('materiales.csv', U.csv(rows), 'text/csv;charset=utf-8');
   }
-  function exportRooms(P) {
-    const rows = [['Cuarto', 'Descripción', 'RU ocupados', 'RU libres', '% rack', 'Patch panels', 'Puertos', 'Salidas', 'Consumo W', 'Calor BTU/h']];
-    P.rooms.forEach(c => rows.push([c.room.codigo, c.room.descripcion, c.ocupados, c.libres, Math.round(c.pctRack * 100), c.panels.length, c.ports, c.outlets, c.power.consumo, c.power.calorBTU]));
-    U.download('resumen-cuartos.csv', U.csv(rows), 'text/csv;charset=utf-8');
-  }
-
   g.MemoriaView = { render };
 })(window);
