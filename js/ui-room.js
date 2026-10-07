@@ -28,7 +28,7 @@
       h('div', null, h('h2', null, 'Nivel ', h('span', { class: 'code' }, room.codigo)), h('p', { class: 'muted' }, room.descripcion || 'Sin descripción')),
       h('div', { class: 'kpis' }, kRU.el, kPct.el, kPP.el, kOut.el, kPPpct.el, kW.el),
       h('p', { class: 'print-meta' }, [Store.project.nombre, Store.project.numero && 'Proyecto N.º ' + Store.project.numero, Store.project.ubicacion, Store.project.revision && 'Rev. ' + Store.project.revision, Store.project.fecha, Store.project.elaboro && 'Elaboró: ' + Store.project.elaboro].filter(Boolean).join('  ·  ')),
-      h('div', { class: 'no-print toolbar-inline' }, UI.btn('Imprimir hoja', () => window.print(), 'small'), UI.btn('Exportar nivel a Word', () => ExportDoc.download(room.id), 'small primary')));
+      h('div', { class: 'no-print toolbar-inline' }, UI.btn('Imprimir hoja', () => window.print(), 'small'), UI.btn('Nivel a Word', () => ExportDoc.download(room.id), 'small primary'), UI.btn('Nivel a Excel', () => ExportXlsx.download(room.id), 'small primary')));
 
     /* ---------- sub-pestañas ---------- */
     const subs = [['rack', 'Rack y equipos'], ['etiquetado', 'Etiquetado de puertos']];

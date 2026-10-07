@@ -19,7 +19,7 @@
     const enc = h('div', { class: 'memo-head' },
       h('div', null, h('h2', null, 'Memoria de cálculo'), h('p', { class: 'muted' }, 'Etiquetado y racks de telecomunicaciones')),
       h('dl', null, [['Proyecto', p.nombre], ['Proyecto #', p.numero], ['Ubicación', p.ubicacion], ['Fecha', p.fecha], ['Elaboró', p.elaboro], ['Revisión', p.revision]].map(([k, v]) => [h('dt', null, k), h('dd', null, v || '—')])),
-      h('div', { class: 'toolbar no-print' }, UI.btn('Imprimir / PDF', () => window.print()), UI.btn('Exportar materiales (CSV)', () => exportBom(P)), UI.btn('Exportar resumen a Word (Revit / CAD)', () => ExportDoc.download(), 'primary')));
+      h('div', { class: 'toolbar no-print' }, UI.btn('Imprimir / PDF', () => window.print()), UI.btn('Exportar materiales (CSV)', () => exportBom(P)), UI.btn('Exportar resumen a Word', () => ExportDoc.download(), 'primary'), UI.btn('Exportar resumen a Excel', () => ExportXlsx.download(), 'primary')));
 
     /* 1. cuartos */
     const t1 = h('table', { class: 'tbl' }, th(['Cuarto', 'Descripción', 'Rack / gabinete', 'RU ocupados', 'RU libres', '% llenado rack', 'Patch panels', 'Puertos', 'Salidas', '% llenado PP']),
