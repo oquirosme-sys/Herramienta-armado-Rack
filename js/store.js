@@ -43,6 +43,7 @@
       if (p.reservaPct === undefined) p.reservaPct = 30;
       if (!p.modoSalidas) p.modoSalidas = 'cuarto';
       if (!p.lans || !p.lans.length) p.lans = [{ id: 1, nombre: 'LAN 1 — Datos' }];
+      if (p.compartirRed === undefined) p.compartirRed = p.lans.length <= 1 && Object.values(p.servicios || {}).every(x => !x.lan || x.lan === 1);
       if (!p.cuartos) p.cuartos = [];
       if (!p.nivelesEdificio) p.nivelesEdificio = [];
       if (!p.fibra) p.fibra = { redundante: false, reserva: 20 };

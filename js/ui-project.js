@@ -35,36 +35,39 @@
       UI.field('Jack por defecto', UI.select(UI.itemOptions(jacks, '— sin jack —'), p.jackId, v => { p.jackId = v; Store.save(); }), 'Se cuenta uno por cada salida etiquetada en la lista de materiales.'));
 
     /* ---------------- servicios y redes LAN ---------------- */
-    const lanCount = UI.select([1, 2, 3, 4].map(n => ({ value: String(n), label: String(n) })), String(p.lans.length), v => {
+    // Una sola pregunta al inicio: ¿todos los servicios comparten una misma red LAN?
+    const compartir = p.compartirRed !== false;
+    const preguntaRed = UI.select(SINO, compartir ? 'si' : 'no', v => {
+      if (v === 'si') { p.compartirRed = true; p.lans = [p.lans[0]]; for (const k in p.servicios) p.servicios[k].lan = 1; }
+      else { p.compartirRed = false; if (p.lans.length < 2) p.lans.push({ id: 2, nombre: 'LAN 2' }); }
+      Store.save(); render(root);
+    });
+    const lanCount = UI.select([2, 3, 4].map(n => ({ value: String(n), label: String(n) })), String(Math.max(2, p.lans.length)), v => {
       const n = Number(v);
       while (p.lans.length < n) p.lans.push({ id: p.lans.length + 1, nombre: 'LAN ' + (p.lans.length + 1) });
       while (p.lans.length > n) p.lans.pop();
       for (const k in p.servicios) if (p.servicios[k].lan > n) p.servicios[k].lan = 1;
       Store.save(); render(root);
     });
-    const lanNames = h('div', { class: 'grid cols-4' }, p.lans.map((l, i) => UI.field('Nombre de la red ' + (i + 1), UI.input(l, 'nombre', { after: () => render(root) }))));
+    const lanNames = compartir ? null : h('div', { class: 'grid cols-4' }, p.lans.map((l, i) => UI.field('Nombre de la red ' + (i + 1), UI.input(l, 'nombre', { after: () => render(root) }))));
     const sbody = h('tbody');
     tipos().forEach(t => {
       const s = p.servicios[t.codigo], isData = t.codigo === 'D';
-      const comparte = UI.select(SINO, s.lan === 1 ? 'si' : 'no', v => {
-        if (v === 'si') s.lan = 1;
-        else if (p.lans.length > 1) s.lan = s.lan > 1 ? s.lan : 2;
-        else { UI.toast('Primero aumente el número de redes LAN.', 'warn'); render(root); return; }
-        Store.save(); render(root);
-      }, { disabled: isData || !s.activo, label: 'Comparte la red de Datos' });
-      const lanSel = UI.select(p.lans.map(l => ({ value: String(l.id), label: l.nombre })), String(s.lan), v => { s.lan = Number(v); Store.save(); render(root); }, { disabled: isData || !s.activo || s.lan === 1, label: 'Red asignada' });
-      sbody.appendChild(h('tr', { class: s.activo ? '' : 'dim' },
+      const cells = [
         h('td', null, h('input', { type: 'checkbox', checked: s.activo, disabled: isData, 'aria-label': 'Activo', onchange: e => { s.activo = e.target.checked; Store.save(); render(root); } })),
         h('td', null, h('b', null, t.codigo)), h('td', null, t.nombre),
-        h('td', null, h('input', { type: 'checkbox', checked: s.poe, disabled: !s.activo, 'aria-label': 'PoE', onchange: e => { s.poe = e.target.checked; Store.save(); } })),
-        h('td', null, comparte), h('td', null, lanSel)));
+        h('td', null, h('input', { type: 'checkbox', checked: s.poe, disabled: !s.activo, 'aria-label': 'PoE', onchange: e => { s.poe = e.target.checked; Store.save(); } }))];
+      if (!compartir) cells.push(h('td', null, UI.select(p.lans.map(l => ({ value: String(l.id), label: l.nombre })), String(s.lan), v => { s.lan = Number(v); Store.save(); render(root); }, { disabled: isData || !s.activo, label: 'Red asignada' })));
+      sbody.appendChild(h('tr', { class: s.activo ? '' : 'dim' }, cells));
     });
-    const lanResumen = p.lans.map(l => { const sv = activos().filter(t => p.servicios[t.codigo].lan === l.id).map(t => t.nombre); return h('li', null, h('b', null, l.nombre + ': '), sv.length ? sv.join(', ') : h('span', { class: 'status bad' }, 'sin servicios')); });
+    const lanResumen = compartir ? null : h('ul', { class: 'steps' }, p.lans.map(l => { const sv = activos().filter(t => p.servicios[t.codigo].lan === l.id).map(t => t.nombre); return h('li', null, h('b', null, l.nombre + ': '), sv.length ? sv.join(', ') : h('span', { class: 'status bad' }, 'sin servicios')); }));
     const servicios = h('div', { class: 'stack' },
-      h('div', { class: 'grid cols-4' }, UI.field('Cantidad de redes LAN', lanCount, 'Cada red tendrá sus propios switches y patch panels; los servicios que la comparten usan los mismos.')),
+      h('div', { class: 'grid cols-4' },
+        UI.field('¿Todos los servicios comparten una misma red LAN?', preguntaRed, compartir ? 'Sí: una sola red para todos los servicios (switches y patch panels compartidos).' : 'No: cada red tendrá sus propios switches y patch panels; asigne cada servicio a una red.', 'span-2'),
+        compartir ? null : UI.field('Cantidad de redes LAN', lanCount)),
       lanNames,
-      h('div', { class: 'table-wrap' }, h('table', { class: 'tbl' }, h('thead', null, h('tr', null, ['Activo', 'Código', 'Servicio', 'PoE', '¿Comparte la red de Datos (LAN 1)?', 'Red asignada'].map(t => h('th', null, t)))), sbody)),
-      h('ul', { class: 'steps' }, lanResumen));
+      h('div', { class: 'table-wrap' }, h('table', { class: 'tbl' }, h('thead', null, h('tr', null, ['Activo', 'Código', 'Servicio', 'PoE'].concat(compartir ? [] : ['Red asignada']).map(t => h('th', null, t)))), sbody)),
+      lanResumen);
 
     /* ---------------- cuartos ---------------- */
     const cbody = h('tbody');
