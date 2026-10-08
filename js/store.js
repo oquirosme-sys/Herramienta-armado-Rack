@@ -59,6 +59,8 @@
       window.SEED.tiposSalida.forEach(t => {
         if (!cat.tiposSalida.some(x => x.codigo === t.codigo)) { const i = cat.tiposSalida.findIndex(x => x.codigo === '-'); cat.tiposSalida.splice(i < 0 ? cat.tiposSalida.length : i, 0, U.clone(t)); }
       });
+      // categorías guardadas antes de existir el glosario: completar descripción
+      cat.categorias.forEach(c => { const sc = window.SEED.categorias.find(x => x.nombre === c.nombre); if (c.descripcion === undefined) c.descripcion = sc ? sc.descripcion : ''; if (!c.imagenes) c.imagenes = []; });
       Store.defaults(p);
       p.niveles.forEach(n => {
         n.equipos = n.equipos || []; n.fuera = n.fuera || []; n.tramos = n.tramos || []; n.portTipos = n.portTipos || {};

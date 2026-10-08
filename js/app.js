@@ -20,7 +20,7 @@
   };
 
   function validRoute() {
-    if (route === 'proyecto' || route === 'memoria') return true;
+    if (route === 'proyecto' || route === 'memoria' || route === 'glosario') return true;
     if (route === 'admin') return Auth.isAdmin();
     if (route.startsWith('nivel/')) return !!Store.findRoom(route.slice(6));
     return false;
@@ -33,6 +33,7 @@
     window.scrollTo(0, 0);
     if (route === 'proyecto') ProjectView.render(view);
     else if (route === 'memoria') MemoriaView.render(view);
+    else if (route === 'glosario') GlosarioView.render(view);
     else if (route === 'admin') AdminView.render(view);
     else RoomView.render(view, route.slice(6));
   }
@@ -43,6 +44,7 @@
     tab('proyecto', 'Proyecto');
     Store.project.niveles.forEach(n => tab('nivel/' + n.id, { text: n.codigo, title: n.descripcion }, 'level'));
     tab('memoria', 'Memoria de cálculo');
+    tab('glosario', 'Glosario de equipos');
     if (Auth.isAdmin()) tab('admin', 'Administración', 'admin');
     bar.querySelectorAll('.tab.level').forEach(a => { const n = Store.findRoom(a.getAttribute('href').slice(7)); if (n) a.title = n.descripcion || ''; });
     const act = bar.querySelector('.tab.active'); if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest', inline: 'nearest' });

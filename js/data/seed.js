@@ -5,137 +5,191 @@ window.SEED = {
   {
    "nombre": "Rack",
    "rol": "rack",
-   "color": "#E7E6E6"
+   "color": "#E7E6E6",
+   "descripcion": "Estructura abierta de 2 postes (19\") para montar equipos de telecomunicaciones. Ideal para patch panels, organizadores y switches cuando el cuarto tiene buen control ambiental. La PDU y la barra de tierra son horizontales y ocupan RU.",
+   "imagenes": []
   },
   {
    "nombre": "Organizador vertical",
    "rol": "orgvert",
-   "color": "#E7E6E6"
+   "color": "#E7E6E6",
+   "descripcion": "Canal lateral del rack o gabinete que ordena y protege los cables de parcheo entre equipos de distintos RU, respetando el radio de curvatura. Puede ir a un lado, a ambos o no llevarse si el gabinete ya trae gestión vertical.",
+   "imagenes": []
   },
   {
    "nombre": "Patch panel cobre",
    "rol": "panel",
-   "color": "#BDD7EE"
+   "color": "#BDD7EE",
+   "descripcion": "Punto de terminación del cableado horizontal en el rack. Cada puerto corresponde a una salida del puesto de trabajo y lleva la etiqueta Cuarto-Panel-Puerto (ej. 1A-AA-01). Hay planos, angulados (que reducen el cable que sobresale hacia el organizador) y de alta densidad (48 puertos en 1 RU).",
+   "imagenes": []
   },
   {
    "nombre": "Organizador horizontal",
    "rol": "equipo",
-   "color": "#D9D9D9"
+   "color": "#D9D9D9",
+   "descripcion": "Panel de 1 o 2 RU con anillos o canal que ordena los cables de parcheo entre los patch panels y los switches.",
+   "imagenes": []
   },
   {
    "nombre": "Fibra",
    "rol": "equipo",
-   "color": "#FFFF00"
+   "color": "#FFFF00",
+   "descripcion": "Bandejas y cajones para terminar y proteger la fibra óptica (cassettes y adaptadores LC). Conectan los cuartos entre sí (fibra troncal) y con el proveedor de servicio.",
+   "imagenes": []
   },
   {
    "nombre": "Switch",
    "rol": "equipo",
-   "color": "#C6EFCE"
+   "color": "#C6EFCE",
+   "descripcion": "Equipo activo que da conectividad a las salidas. Los modelos PoE alimentan por el mismo cable cámaras, puntos de acceso inalámbricos, controladores y otros dispositivos.",
+   "imagenes": []
   },
   {
    "nombre": "CCTV",
    "rol": "equipo",
-   "color": "#B4A7D6"
+   "color": "#B4A7D6",
+   "descripcion": "Grabadores y servidores de video (NVR) que reciben y almacenan las imágenes de las cámaras IP.",
+   "imagenes": []
   },
   {
    "nombre": "Control de acceso",
    "rol": "equipo",
-   "color": "#D9B3FF"
+   "color": "#D9B3FF",
+   "descripcion": "Controladores y módulos que gestionan lectoras, puertas y credenciales.",
+   "imagenes": []
   },
   {
    "nombre": "Rack de pared",
    "rol": "rack",
-   "color": "#E7E6E6"
+   "color": "#E7E6E6",
+   "descripcion": "Soporte abatible que se fija a la pared y ofrece pocos RU. Sirve para puntos pequeños con pocos equipos, sin puerta.",
+   "imagenes": []
   },
   {
    "nombre": "Gabinete de pared",
    "rol": "rack",
-   "color": "#E7E6E6"
+   "color": "#E7E6E6",
+   "descripcion": "Gabinete cerrado y con puerta que se fija a la pared (de 9 a 26 RU). Para cuartos pequeños o puntos de distribución secundarios.",
+   "imagenes": []
   },
   {
    "nombre": "Fuente de poder",
    "rol": "equipo",
-   "color": "#FFD966"
+   "color": "#FFD966",
+   "descripcion": "Fuentes y controladores de energía de baja tensión para cerraduras, lectoras y otros dispositivos del sistema de acceso.",
+   "imagenes": []
   },
   {
    "nombre": "Audio",
    "rol": "equipo",
-   "color": "#F4B6C2"
+   "color": "#F4B6C2",
+   "descripcion": "Amplificadores y procesadores de audio de rack para sonido ambiental y evacuación por voz.",
+   "imagenes": []
   },
   {
    "nombre": "Audio (campo)",
    "rol": "equipo",
-   "color": "#CFE2D6"
+   "color": "#CFE2D6",
+   "descripcion": "Equipos de campo del sistema de audio: parlantes, decodificadores AV sobre IP y micrófonos remotos. No van en el rack.",
+   "imagenes": []
   },
   {
    "nombre": "Gabinete",
    "rol": "rack",
-   "color": "#E7E6E6"
+   "color": "#E7E6E6",
+   "descripcion": "Estructura cerrada de 4 postes con puertas y paneles laterales: da seguridad, orden y mejor control del flujo de aire. Se usa para equipo activo, servidores y almacenamiento. Admite PDU y barra de tierra verticales, que van a los lados y no ocupan RU.",
+   "imagenes": []
   },
   {
    "nombre": "PDU",
    "rol": "equipo",
-   "color": "#FFC7CE"
+   "color": "#FFC7CE",
+   "descripcion": "Unidad de distribución de energía del rack. En un rack de 2 postes es horizontal (1 RU); en un gabinete suele ser vertical (0U) y va a los lados.",
+   "imagenes": []
   },
   {
    "nombre": "UPS",
    "rol": "ups",
-   "color": "#92D050"
+   "color": "#92D050",
+   "descripcion": "Respaldo de energía con baterías. Su capacidad se compara con la carga del rack; se recomienda no pasar del 80 %.",
+   "imagenes": []
   },
   {
    "nombre": "Tapa ciega",
    "rol": "equipo",
-   "color": "#808080"
+   "color": "#808080",
+   "descripcion": "Panel que cierra los RU vacíos para mantener separado el aire frío del caliente y dar buena presentación.",
+   "imagenes": []
   },
   {
    "nombre": "Bandeja",
    "rol": "equipo",
-   "color": "#00B050"
+   "color": "#00B050",
+   "descripcion": "Bandeja fija para apoyar equipos que no se montan directamente en el rack.",
+   "imagenes": []
   },
   {
    "nombre": "Espacio libre",
    "rol": "libre",
-   "color": "#FFFFFF"
+   "color": "#FFFFFF",
+   "descripcion": "RU sin equipo; no se compra ni cuenta como ocupado. Se recomienda cerrarlo con tapas ciegas.",
+   "imagenes": []
   },
   {
    "nombre": "Espacio reservado",
    "rol": "reservado",
-   "color": "#F8CBAD"
+   "color": "#F8CBAD",
+   "descripcion": "RU que se reserva para un equipo futuro (por ejemplo, un switch o la fibra del proveedor). Ocupa lugar en el rack pero no entra en la lista de materiales.",
+   "imagenes": []
   },
   {
    "nombre": "Servidor",
    "rol": "equipo",
-   "color": "#FFC000"
+   "color": "#FFC000",
+   "descripcion": "Equipo de cómputo de otros sistemas. Se define con el proveedor del sistema.",
+   "imagenes": []
   },
   {
    "nombre": "Equipo activo",
    "rol": "equipo",
-   "color": "#2F75B5"
+   "color": "#2F75B5",
+   "descripcion": "Equipo de red o de otro sistema por definir con el proveedor.",
+   "imagenes": []
   },
   {
    "nombre": "Puesta a tierra",
    "rol": "equipo",
-   "color": "#A6A6A6"
+   "color": "#A6A6A6",
+   "descripcion": "Barra de tierra del rack para conectar equipos y estructura al sistema de puesta a tierra de telecomunicaciones. En rack es horizontal; en gabinete puede ser vertical.",
+   "imagenes": []
   },
   {
    "nombre": "Jack",
    "rol": "jack",
-   "color": "#E7E6E6"
+   "color": "#E7E6E6",
+   "descripcion": "Conector RJ45 modular (Cat 6 o 6A) que se inserta en el patch panel y en la placa de salida del puesto de trabajo. Se cuenta uno por cada salida.",
+   "imagenes": []
   },
   {
    "nombre": "Canasta portacables",
    "rol": "canalizacion",
-   "color": "#9DC3E6"
+   "color": "#9DC3E6",
+   "descripcion": "Bandeja portacables: término general para las canalizaciones tipo bandeja o canasta. La canasta tipo malla se usa en telecomunicaciones para cobre (UTP) y cables ligeros; la tipo escalera, cuando la densidad de cableado y el peso son altos.",
+   "imagenes": []
   },
   {
    "nombre": "Tubería",
    "rol": "canalizacion",
-   "color": "#F4B183"
+   "color": "#F4B183",
+   "descripcion": "Canalización cerrada (por ejemplo EMT) para tramos que requieren protección mecánica.",
+   "imagenes": []
   },
   {
    "nombre": "Cableado",
    "rol": "cableado",
-   "color": "#A9D18E"
+   "color": "#A9D18E",
+   "descripcion": "Cable de cobre (UTP) o fibra óptica que conecta las salidas con los patch panels y los cuartos entre sí.",
+   "imagenes": []
   }
  ],
  "items": [

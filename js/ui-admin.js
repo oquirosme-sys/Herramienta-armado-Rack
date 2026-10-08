@@ -79,7 +79,8 @@
     const body = h('div', { class: 'stack' }, marcaList,
       h('div', { class: 'grid cols-4' }, UI.field('Categoría', d.categoria), UI.field('Descripción', inp('descripcion'), null, 'span-3'),
         UI.field('Marca', inp('marca', 'text', { list: 'dl-marcas' }), 'Si escribe una marca nueva se agrega a la lista de marcas.', 'span-2'), UI.field('N.º de parte', inp('parte'), null, 'span-2')),
-      extraRu, extraLin, UI.field('Especificación / notas', notas), err);
+      extraRu, extraLin, UI.field('Especificación / notas', notas),
+      UI.field('Imagen del catálogo', UI.imagePicker(() => it.imagen || '', v => { it.imagen = v; }, 'Imagen del equipo'), 'Se muestra en la lista de equipos del rack, en la memoria y en el glosario. Se guarda reducida.'), err);
     toggle();
     UI.modal(isNew ? 'Nuevo elemento del catálogo' : 'Editar elemento', body, [{ label: 'Cancelar' }, {
       label: 'Guardar', cls: 'primary', onclick: () => {
@@ -89,7 +90,7 @@
         const out = isNew || !src.id ? { id: Store.nextItemId() } : cat.items.find(x => x.id === src.id);
         out.categoria = d.categoria.value; out.descripcion = desc; out.marca = d.marca.value.trim(); out.parte = d.parte.value.trim(); out.notas = notas.value.trim();
         ['ru', 'puertos', 'consumo', 'peso', 'capacidad', 'largoPieza'].forEach(k => { out[k] = d[k] ? U.toNum(d[k].value) : null; });
-        out.unidad = d.unidad.value.trim() || 'm';
+        out.unidad = d.unidad.value.trim() || 'm'; out.imagen = it.imagen || '';
         if (out.marca && !cat.marcas.includes(out.marca)) { cat.marcas.push(out.marca); cat.marcas.sort((a, b) => a.localeCompare(b)); }
         if (!cat.items.includes(out)) cat.items.push(out);
         Store.saveCatalog(); redraw(); UI.toast('Catálogo actualizado.');
@@ -113,7 +114,7 @@
       const rol = UI.select(ROLES.map(([v, t]) => ({ value: v, label: t })), c.rol, v => { c.rol = v; Store.saveCatalog(); }, { label: 'Rol' });
       const col = h('input', { type: 'color', value: c.color, 'aria-label': 'Color' }); col.addEventListener('change', () => { c.color = col.value; Store.saveCatalog(); });
       tb.appendChild(h('tr', null, h('td', null, nameI), h('td', null, rol), h('td', null, col), h('td', { class: 'num' }, n),
-        h('td', { class: 'row-actions' }, UI.iconBtn('✕', 'Eliminar', async () => { if (n) { UI.alert('La categoría tiene ' + n + ' elementos; muévalos o elimínelos primero.'); return; } cat.categorias = cat.categorias.filter(x => x !== c); Store.saveCatalog(); redraw(); }, 'danger'))));
+        h('td', { class: 'row-actions' }, UI.btn('Glosario…', () => catDetail(c, redraw), 'small'), UI.iconBtn('✕', 'Eliminar', async () => { if (n) { UI.alert('La categoría tiene ' + n + ' elementos; muévalos o elimínelos primero.'); return; } cat.categorias = cat.categorias.filter(x => x !== c); Store.saveCatalog(); redraw(); }, 'danger'))));
     });
     const nm = h('input', { type: 'text', placeholder: 'Nueva categoría (ej. Escalerilla)' });
     const rl = UI.select(ROLES.map(([v, t]) => ({ value: v, label: t })), 'canalizacion', () => { });
@@ -124,6 +125,15 @@
         const v = nm.value.trim(); if (!v || cat.categorias.some(x => x.nombre === v)) { UI.toast('Nombre vacío o repetido.', 'warn'); return; }
         cat.categorias.push({ nombre: v, rol: rl.value, color: '#d0d7de' }); Store.saveCatalog(); redraw();
       }, 'primary'))]));
+  }
+
+  /** Descripción e imágenes de una categoría (módulo Glosario). */
+  function catDetail(c, redraw) {
+    const imgs = (c.imagenes || []).slice(0, 4); while (imgs.length < 3) imgs.push('');
+    const desc = h('textarea', { rows: 6 }, c.descripcion || '');
+    const pickers = imgs.map((v, i) => UI.field('Imagen ' + (i + 1), UI.imagePicker(() => imgs[i], x => { imgs[i] = x; }, 'Imagen de ' + c.nombre)));
+    UI.modal('Glosario — ' + c.nombre, h('div', { class: 'stack' }, UI.field('Descripción', desc, 'Qué es, para qué sirve y cuándo se usa. Se muestra en el Glosario de equipos.'), ...pickers), [
+      { label: 'Cancelar' }, { label: 'Guardar', cls: 'primary', onclick: () => { c.descripcion = desc.value.trim(); c.imagenes = imgs.filter(Boolean); Store.saveCatalog(); UI.toast('Glosario actualizado.'); redraw(); } }], { wide: true });
   }
 
   /* ---------------- Marcas ---------------- */

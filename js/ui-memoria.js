@@ -65,7 +65,7 @@
       UI.card('4. Fibra troncal entre cuartos (estimado: validar por el ingeniero)', [h('p', { class: 'hint' }, 'Cuarto principal: ' + ((p.cuartos.find(c => c.tipo === 'principal') || {}).codigo || '—') + '. Un enlace por red LAN (' + (p.fibra.redundante ? 'redundante' : 'sin redundancia') + '), 2 fibras por enlace.'), h('div', { class: 'table-wrap' }, tFib)]),
       UI.card('5. Vista de cada rack', h('div', { class: 'elev-grid' }, R.map(c => {
         const host = h('div', { class: 'elev-host' }); RoomView.drawElevation(host, c, c.room);
-        return h('div', { class: 'elev-item' }, h('h4', null, c.room.codigo + (c.room.descripcion ? ' — ' + c.room.descripcion : '')), h('p', { class: 'muted' }, (c.rack ? c.rack.descripcion : 'Sin rack') + ' · ' + c.ocupados + ' / ' + c.totalRU + ' RU (' + U.pct(c.pctRack) + ')'), host);
+        return h('div', { class: 'elev-item' }, h('h4', null, c.room.codigo + ' · cuarto ' + c.prefix + (c.room.descripcion ? ' — ' + c.room.descripcion : '')), h('p', { class: 'muted' }, (c.rack ? c.rack.descripcion : 'Sin rack') + ' · ' + c.ocupados + ' / ' + c.totalRU + ' RU (' + U.pct(c.pctRack) + ')'), h('div', { class: 'elev-pair' }, host, RoomView.equipList(c)));
       }))),
       UI.card('6. Salidas por tipo', h('div', { class: 'table-wrap' }, t2)),
       UI.card('7. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),

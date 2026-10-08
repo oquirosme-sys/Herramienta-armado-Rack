@@ -119,8 +119,20 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
 .menu-list button { text-align: left; appearance: none; background: none; border: 0; padding: .5rem .7rem; border-radius: 5px; font: inherit; color: var(--ink); cursor: pointer; } .menu-list button:hover { background: var(--line-2); }
 
 /* ---------- Responsive e impresión ---------- */
+/* ---------- imágenes de catálogo y glosario ---------- */
+.thumb { object-fit: contain; background: #fff; border: 1px solid var(--line); border-radius: 6px; flex: none; }
+.thumb.ph { display: grid; place-items: center; font-size: .6rem; font-weight: 700; color: rgba(0,0,0,.55); }
+.eq-list { display: flex; flex-direction: column; gap: .35rem; }
+.eq-li { display: flex; gap: .6rem; align-items: center; padding: .3rem; border: 1px solid var(--line-2); border-radius: 8px; break-inside: avoid; }
+.eq-t { flex: 1; min-width: 0; font-size: .82rem; } .eq-t .muted { font-size: .74rem; } .qty { font-weight: 700; font-size: 1rem; color: var(--brand); padding-right: .3rem; }
+.elev-pair { display: grid; grid-template-columns: minmax(250px, 300px) minmax(0, 1fr); gap: .8rem; align-items: start; }
+.img-pick { display: grid; grid-template-columns: 150px 1fr; gap: .8rem; align-items: start; } .img-prev { width: 150px; height: 120px; border: 1px dashed var(--line); border-radius: 8px; display: grid; place-items: center; background: #fff; overflow: hidden; } .img-prev img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.gl-cat { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 40%); gap: 1rem; } .gl-cat h3 { font-size: 1.15rem; color: var(--brand); margin-bottom: .3rem; } .gl-cat p { margin: .3rem 0; text-align: justify; }
+.gl-imgs { display: flex; flex-wrap: wrap; gap: .5rem; align-content: flex-start; justify-content: center; } .gl-imgs img { max-width: 48%; max-height: 150px; object-fit: contain; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; }
+.gl-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .5rem; margin-top: .8rem; }
+.gl-it { display: flex; gap: .6rem; padding: .4rem; border: 1px solid var(--line-2); border-radius: 8px; font-size: .82rem; } .gl-it .muted { font-size: .74rem; }
 @media (max-width: 1100px) { .rack-layout { grid-template-columns: 1fr; } .sticky { position: static; } .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .cols-2, .cols-3, .cols-4 { grid-template-columns: 1fr; } .span-2, .span-3 { grid-column: auto; } .view { padding: .6rem; } .memo-head dl { grid-template-columns: auto 1fr; } }
+@media (max-width: 640px) { .elev-pair, .gl-cat, .img-pick { grid-template-columns: 1fr; } .cols-2, .cols-3, .cols-4 { grid-template-columns: 1fr; } .span-2, .span-3 { grid-column: auto; } .view { padding: .6rem; } .memo-head dl { grid-template-columns: auto 1fr; } }
 @media print {
   @page { size: landscape; margin: 10mm; }
   body { background: #fff; color: #000; font-size: 10pt; }
@@ -134,7 +146,7 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
 .nowrap { white-space: nowrap; } .btn.more { margin-left: .25rem; padding: .15rem .45rem; }
 
 .print-meta, .print-txt { display: none; }
-.elev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+.elev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap: 1.25rem; }
 .elev-item { min-width: 0; break-inside: avoid; } .elev-item h4 { margin-bottom: .1rem; } .elev-item .muted { margin: 0 0 .5rem; font-size: .82rem; }
 .elev-grid .elev { --ru: 14px; font-size: .66rem; }
 @media print {
@@ -155,7 +167,7 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
   .rack-layout { grid-template-columns: minmax(0, 1fr) 270px; gap: .6rem; }
   .elev, .elev-grid .elev { --ru: 10.5px; font-size: 6.5pt; }
   .elev-host { break-inside: avoid; } .sticky { break-inside: avoid; }
-  .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .elev-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .elev-grid { grid-template-columns: 1fr; } .elev-pair { grid-template-columns: 250px minmax(0, 1fr); } .eq-li { padding: .15rem; } .thumb { width: 36px !important; height: 36px !important; } .gl-cat { break-inside: avoid; }
   h2 { font-size: 14pt; } .kpi { padding: .15rem .4rem; min-width: 0; } .kpi b { font-size: 9pt; }
   .card { border-color: #bbb; }
 }

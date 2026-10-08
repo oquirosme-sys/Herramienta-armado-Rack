@@ -180,8 +180,10 @@
     const elevCard = UI.card('Vista del rack', elev);
     elevCard.classList.add('sticky');
 
+    const listHost = h('div'); B.pane.push(c => { U.clear(listHost); listHost.appendChild(equipList(c)); });
+    const listCard = UI.card('Lista de equipos con imagen del catálogo', [h('p', { class: 'hint' }, 'Cantidades de este rack. Las imágenes se cargan en Administración ▸ Catálogo.'), listHost]);
     return h('div', { class: 'rack-layout' },
-      h('div', { class: 'stack' }, UI.card('Datos del cuarto', datos), eqCard, outCard, pwCard), elevCard);
+      h('div', { class: 'stack' }, UI.card('Datos del rack', datos), eqCard, outCard, listCard, pwCard), elevCard);
   }
 
   /** Tipos de salida adicionales de un mismo patch panel (p. ej. 12 D + 12 W). Se asignan en orden tras las salidas del tipo principal. */
@@ -210,6 +212,16 @@
     build();
     UI.modal('Tipos de salida del panel', host, [{ label: 'Cancelar', onclick: () => { eq.mas = JSON.parse(snap); } }, { label: 'Aceptar', cls: 'primary', onclick: () => { eq.mas = eq.mas.filter(m => m.tipo && Number(m.cant) > 0); Store.save(); refresh(); if (btn) btn.textContent = eq.mas.length ? '+' + eq.mas.length : '+ tipo'; } }]);
     var snap = JSON.stringify(eq.mas);
+  }
+
+  /** Lista de equipos del rack con la imagen del catálogo (agrupada, con cantidades). */
+  function equipList(C) {
+    const cat = Store.catalog, ix = Calc.index(cat), ord = {}; cat.categorias.forEach((c, i) => { ord[c.nombre] = i; });
+    const list = Object.keys(C.bom).map(id => ({ it: ix.byId[id], q: C.bom[id] })).filter(x => x.it).sort((a, b) => (ord[a.it.categoria] - ord[b.it.categoria]) || a.it.descripcion.localeCompare(b.it.descripcion));
+    if (!list.length) return h('p', { class: 'empty' }, 'Sin equipos.');
+    return h('div', { class: 'eq-list' }, list.map(({ it, q }) => h('div', { class: 'eq-li' }, UI.thumb(it, ix.colorOf(it), 56),
+      h('div', { class: 'eq-t' }, h('b', null, it.descripcion), h('div', { class: 'muted' }, [it.marca, it.parte].filter(x => x && x !== 'Por definir').join(' · ') || 'Por definir'), h('div', { class: 'muted' }, it.categoria + (it.ru > 0 ? ' · ' + it.ru + ' RU c/u' : ''))),
+      h('span', { class: 'qty' }, '×' + q))));
   }
 
   function drawElevation(host, C, room) {
@@ -279,5 +291,5 @@
     return host;
   }
 
-  g.RoomView = { render, drawElevation };
+  g.RoomView = { render, drawElevation, equipList };
 })(window);

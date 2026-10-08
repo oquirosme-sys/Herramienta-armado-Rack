@@ -56,6 +56,32 @@
       return o;
     },
 
+    /** Reduce una imagen a un JPEG pequeño (data URL) para guardarla en el navegador. */
+    resizeImage(file, max) {
+      max = max || 420;
+      return new Promise((res, rej) => {
+        const fr = new FileReader();
+        fr.onload = () => { const im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)); const c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', 0.82)); }; im.onerror = () => rej(new Error('No se pudo leer la imagen.')); im.src = fr.result; };
+        fr.onerror = () => rej(new Error('No se pudo leer el archivo.')); fr.readAsDataURL(file);
+      });
+    },
+    /** Miniatura del equipo: su imagen o un recuadro con el color de su categoría. */
+    thumb(item, color, size) {
+      const s = (size || 56) + 'px';
+      if (item && item.imagen) return h('img', { class: 'thumb', src: item.imagen, alt: item.descripcion, loading: 'lazy', style: { width: s, height: s } });
+      return h('div', { class: 'thumb ph', style: { width: s, height: s, background: color || '#E7E6E6' }, title: 'Sin imagen' }, item ? (item.categoria || '').slice(0, 3).toUpperCase() : '');
+    },
+    /** Selector de imagen (subir archivo o pegar enlace). get/set leen y guardan el valor. */
+    imagePicker(get, set, label) {
+      const prev = h('div', { class: 'img-prev' }), url = h('input', { type: 'url', placeholder: 'o pegue un enlace (https://…)', 'aria-label': 'Enlace de la imagen' });
+      const file = h('input', { type: 'file', accept: 'image/*', style: { display: 'none' } });
+      const draw = () => { U.clear(prev); const v = get(); prev.appendChild(v ? h('img', { src: v, alt: label || 'Imagen' }) : h('span', { class: 'muted' }, 'Sin imagen')); url.value = v && !v.startsWith('data:') ? v : ''; };
+      file.addEventListener('change', async () => { if (!file.files[0]) return; try { set(await UI.resizeImage(file.files[0])); draw(); } catch (e) { UI.alert(e.message); } file.value = ''; });
+      url.addEventListener('change', () => { set(url.value.trim()); draw(); });
+      draw();
+      return h('div', { class: 'img-pick' }, prev, h('div', { class: 'stack' }, h('div', { class: 'toolbar' }, UI.btn('Subir imagen…', () => file.click(), 'small'), UI.btn('Quitar', () => { set(''); draw(); }, 'small ghost'), file), url));
+    },
+
     btn(label, onclick, cls, title) { return h('button', { type: 'button', class: 'btn ' + (cls || ''), onclick, title: title || null }, label); },
     iconBtn(label, title, onclick, cls) { return h('button', { type: 'button', class: 'icon-btn ' + (cls || ''), onclick, title, 'aria-label': title }, label); },
 
