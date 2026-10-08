@@ -60,6 +60,9 @@
         if (!cat.tiposSalida.some(x => x.codigo === t.codigo)) { const i = cat.tiposSalida.findIndex(x => x.codigo === '-'); cat.tiposSalida.splice(i < 0 ? cat.tiposSalida.length : i, 0, U.clone(t)); }
       });
       // categorías guardadas antes de existir el glosario: completar descripción
+      // imágenes de fabricante incluidas en el catálogo inicial: completar las piezas que aún no tienen (una imagen quitada por el administrador queda vacía y no se repone)
+      cat.items.forEach(it => { if (it.imagen === undefined) { const si = window.SEED.items.find(x => x.id === it.id && x.descripcion === it.descripcion); if (si && si.imagen) { it.imagen = si.imagen; it.imagenRef = si.imagenRef; } } });
+      cat.categorias.forEach(c => { const sc0 = window.SEED.categorias.find(x => x.nombre === c.nombre); if ((!c.imagenes || !c.imagenes.length) && c.imagenesInit === undefined && sc0) { c.imagenes = (sc0.imagenes || []).slice(); c.imagenesInit = true; } });
       cat.categorias.forEach(c => { const sc = window.SEED.categorias.find(x => x.nombre === c.nombre); if (c.descripcion === undefined) c.descripcion = sc ? sc.descripcion : ''; if (!c.imagenes) c.imagenes = []; });
       Store.defaults(p);
       p.niveles.forEach(n => {

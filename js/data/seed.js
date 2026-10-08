@@ -7,112 +7,152 @@ window.SEED = {
    "rol": "rack",
    "color": "#E7E6E6",
    "descripcion": "Estructura abierta de 2 postes (19\") para montar equipos de telecomunicaciones. Ideal para patch panels, organizadores y switches cuando el cuarto tiene buen control ambiental. La PDU y la barra de tierra son horizontales y ocupan RU.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/rack-r2p.jpg"
+   ]
   },
   {
    "nombre": "Organizador vertical",
    "rol": "orgvert",
    "color": "#E7E6E6",
    "descripcion": "Canal lateral del rack o gabinete que ordena y protege los cables de parcheo entre equipos de distintos RU, respetando el radio de curvatura. Puede ir a un lado, a ambos o no llevarse si el gabinete ya trae gestión vertical.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/org-vert-pr2.jpg",
+    "img/catalogo/org-vert-netrunner.jpg"
+   ]
   },
   {
    "nombre": "Patch panel cobre",
    "rol": "panel",
    "color": "#BDD7EE",
    "descripcion": "Punto de terminación del cableado horizontal en el rack. Cada puerto corresponde a una salida del puesto de trabajo y lleva la etiqueta Cuarto-Panel-Puerto (ej. 1A-AA-01). Hay planos, angulados (que reducen el cable que sobresale hacia el organizador) y de alta densidad (48 puertos en 1 RU).",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/pp-24-plano.jpg",
+    "img/catalogo/pp-24-angulado.jpg"
+   ]
   },
   {
    "nombre": "Organizador horizontal",
    "rol": "equipo",
    "color": "#D9D9D9",
    "descripcion": "Panel de 1 o 2 RU con anillos o canal que ordena los cables de parcheo entre los patch panels y los switches.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/nmf1.jpg",
+    "img/catalogo/nm1.jpg"
+   ]
   },
   {
    "nombre": "Fibra",
    "rol": "equipo",
    "color": "#FFFF00",
    "descripcion": "Bandejas y cajones para terminar y proteger la fibra óptica (cassettes y adaptadores LC). Conectan los cuartos entre sí (fibra troncal) y con el proveedor de servicio.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/fce1u.jpg"
+   ]
   },
   {
    "nombre": "Switch",
    "rol": "equipo",
    "color": "#C6EFCE",
    "descripcion": "Equipo activo que da conectividad a las salidas. Los modelos PoE alimentan por el mismo cable cámaras, puntos de acceso inalámbricos, controladores y otros dispositivos.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/cisco-c9200l-48p.jpg"
+   ]
   },
   {
    "nombre": "CCTV",
    "rol": "equipo",
    "color": "#B4A7D6",
    "descripcion": "Grabadores y servidores de video (NVR) que reciben y almacenan las imágenes de las cámaras IP.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/axis-s1224-rack.jpg",
+    "img/catalogo/axis-s1232-rack.jpg"
+   ]
   },
   {
    "nombre": "Control de acceso",
    "rol": "equipo",
    "color": "#D9B3FF",
    "descripcion": "Controladores y módulos que gestionan lectoras, puertas y credenciales.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/kantech-kt-400.jpg",
+    "img/catalogo/istar-ultra.jpg"
+   ]
   },
   {
    "nombre": "Rack de pared",
    "rol": "rack",
    "color": "#E7E6E6",
    "descripcion": "Soporte abatible que se fija a la pared y ofrece pocos RU. Sirve para puntos pequeños con pocos equipos, sin puerta.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/soporte-pared-wbh.jpg"
+   ]
   },
   {
    "nombre": "Gabinete de pared",
    "rol": "rack",
    "color": "#E7E6E6",
    "descripcion": "Gabinete cerrado y con puerta que se fija a la pared (de 9 a 26 RU). Para cuartos pequeños o puntos de distribución secundarios.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gab-pared-panzone.jpg"
+   ]
   },
   {
    "nombre": "Fuente de poder",
    "rol": "equipo",
    "color": "#FFD966",
    "descripcion": "Fuentes y controladores de energía de baja tensión para cerraduras, lectoras y otros dispositivos del sistema de acceso.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/altronix-maximal1rh.jpg",
+    "img/catalogo/altronix-maximal1r.jpg"
+   ]
   },
   {
    "nombre": "Audio",
    "rol": "equipo",
    "color": "#F4B6C2",
    "descripcion": "Amplificadores y procesadores de audio de rack para sonido ambiental y evacuación por voz.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/crown-cdi-2300.jpg",
+    "img/catalogo/crown-cdi-4300.jpg"
+   ]
   },
   {
    "nombre": "Audio (campo)",
    "rol": "equipo",
    "color": "#CFE2D6",
    "descripcion": "Equipos de campo del sistema de audio: parlantes, decodificadores AV sobre IP y micrófonos remotos. No van en el rack.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/amx-nmx-dec-n3322d.jpg",
+    "img/catalogo/toa-rm-200m.jpg"
+   ]
   },
   {
    "nombre": "Gabinete",
    "rol": "rack",
    "color": "#E7E6E6",
    "descripcion": "Estructura cerrada de 4 postes con puertas y paneles laterales: da seguridad, orden y mejor control del flujo de aire. Se usa para equipo activo, servidores y almacenamiento. Admite PDU y barra de tierra verticales, que van a los lados y no ocupan RU.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gab-flexfusion.jpg"
+   ]
   },
   {
    "nombre": "PDU",
    "rol": "equipo",
    "color": "#FFC7CE",
    "descripcion": "Unidad de distribución de energía del rack. En un rack de 2 postes es horizontal (1 RU); en un gabinete suele ser vertical (0U) y va a los lados.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/pdu-horizontal-1u.jpg"
+   ]
   },
   {
    "nombre": "UPS",
    "rol": "ups",
    "color": "#92D050",
    "descripcion": "Respaldo de energía con baterías. Su capacidad se compara con la carga del rack; se recomienda no pasar del 80 %.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/apc-smt3000rm2u.jpg"
+   ]
   },
   {
    "nombre": "Tapa ciega",
@@ -126,7 +166,9 @@ window.SEED = {
    "rol": "equipo",
    "color": "#00B050",
    "descripcion": "Bandeja fija para apoyar equipos que no se montan directamente en el rack.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/bandeja-fija-2u.jpg"
+   ]
   },
   {
    "nombre": "Espacio libre",
@@ -168,7 +210,9 @@ window.SEED = {
    "rol": "jack",
    "color": "#E7E6E6",
    "descripcion": "Conector RJ45 modular (Cat 6 o 6A) que se inserta en el patch panel y en la placa de salida del puesto de trabajo. Se cuenta uno por cada salida.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/jack-cj6x88tgbu.jpg"
+   ]
   },
   {
    "nombre": "Canasta portacables",
@@ -204,7 +248,9 @@ window.SEED = {
    "notas": "EIA-310, 19\"; 84\" (2134 mm) alto; carga UL 1000 lb",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/rack-r2p.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-002",
@@ -217,7 +263,9 @@ window.SEED = {
    "notas": "19\"; 84\" (2134 mm) alto",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/rack-r2p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-003",
@@ -230,7 +278,9 @@ window.SEED = {
    "notas": "19\"; canal 6\"; carga UL 1500 lb",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/rack-r2p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-004",
@@ -243,7 +293,9 @@ window.SEED = {
    "notas": "79\" (2007 mm) alto",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/rack-r2p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-005",
@@ -256,7 +308,9 @@ window.SEED = {
    "notas": "Para rack 2 postes, 45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-pr2.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-006",
@@ -269,7 +323,9 @@ window.SEED = {
    "notas": "Para rack 2 postes, 45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-pr2.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-007",
@@ -282,7 +338,9 @@ window.SEED = {
    "notas": "Para rack 2 postes, 45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-pr2.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-008",
@@ -295,7 +353,9 @@ window.SEED = {
    "notas": "Para rack 2 postes, 45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-pr2.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-009",
@@ -308,7 +368,9 @@ window.SEED = {
    "notas": "Para rack 2 postes, 45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-pr2.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-010",
@@ -321,7 +383,9 @@ window.SEED = {
    "notas": "Para rack 2 postes, 45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-pr2.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-011",
@@ -334,7 +398,9 @@ window.SEED = {
    "notas": "Para rack 2 postes, 45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-pr2.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-012",
@@ -347,7 +413,9 @@ window.SEED = {
    "notas": "Para rack 2 postes, 45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-pr2.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-013",
@@ -360,7 +428,9 @@ window.SEED = {
    "notas": "45RU",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-netrunner.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-014",
@@ -373,7 +443,9 @@ window.SEED = {
    "notas": "45RU, alta capacidad",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/org-vert-netrunner.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-015",
@@ -386,7 +458,9 @@ window.SEED = {
    "notas": "Mini-Com modular, montaje al ras",
    "consumo": 0,
    "peso": 1,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/pp-24-plano.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-016",
@@ -399,7 +473,9 @@ window.SEED = {
    "notas": "Mini-Com modular, montaje al ras",
    "consumo": 0,
    "peso": 2,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/pp-24-plano.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-017",
@@ -412,7 +488,9 @@ window.SEED = {
    "notas": "Mini-Com modular angulado",
    "consumo": 0,
    "peso": 1,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/pp-24-angulado.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-018",
@@ -425,7 +503,9 @@ window.SEED = {
    "notas": "Mini-Com modular angulado",
    "consumo": 0,
    "peso": 2,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/pp-24-angulado.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-019",
@@ -438,7 +518,9 @@ window.SEED = {
    "notas": "Mini-Com HD, 48 puertos por RU",
    "consumo": 0,
    "peso": 1.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/pp-48-hd-plano.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-020",
@@ -451,7 +533,9 @@ window.SEED = {
    "notas": "Mini-Com HD angulado",
    "consumo": 0,
    "peso": 1.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/pp-48-hd-angulado.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-021",
@@ -464,7 +548,9 @@ window.SEED = {
    "notas": "NetManager",
    "consumo": 0,
    "peso": 1,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/nmf1.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-022",
@@ -477,7 +563,9 @@ window.SEED = {
    "notas": "NetManager",
    "consumo": 0,
    "peso": 1,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/nm1.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-023",
@@ -490,7 +578,9 @@ window.SEED = {
    "notas": "NetManager",
    "consumo": 0,
    "peso": 2,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/nmf2.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-024",
@@ -503,7 +593,9 @@ window.SEED = {
    "notas": "NetManager",
    "consumo": 0,
    "peso": 2,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/nm2.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-025",
@@ -516,7 +608,9 @@ window.SEED = {
    "notas": "NetRunner",
    "consumo": 0,
    "peso": 1,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/wmpfse.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-026",
@@ -529,7 +623,9 @@ window.SEED = {
    "notas": "NetRunner",
    "consumo": 0,
    "peso": 2,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/wmpf1e.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-027",
@@ -542,7 +638,9 @@ window.SEED = {
    "notas": "NetRunner",
    "consumo": 0,
    "peso": 1,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/wmpse.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-028",
@@ -555,7 +653,9 @@ window.SEED = {
    "notas": "NetRunner",
    "consumo": 0,
    "peso": 2,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/wmp1e.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-029",
@@ -568,7 +668,9 @@ window.SEED = {
    "notas": "Opticom QuickNet",
    "consumo": 0,
    "peso": 3,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/fce1u.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-030",
@@ -581,7 +683,9 @@ window.SEED = {
    "notas": "Opticom QuickNet",
    "consumo": 0,
    "peso": 5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/fce1u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-031",
@@ -594,7 +698,9 @@ window.SEED = {
    "notas": "Opticom QuickNet",
    "consumo": 0,
    "peso": 8,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/fce1u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-032",
@@ -607,7 +713,9 @@ window.SEED = {
    "notas": "24×1G datos, 4×1G uplink",
    "consumo": 45,
    "peso": 4.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/cisco-c9200l-48p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-033",
@@ -620,7 +728,9 @@ window.SEED = {
    "notas": "24×1G PoE+, 4×1G uplink, PoE 370 W (740 W con 2 fuentes)",
    "consumo": 70,
    "peso": 4.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/cisco-c9200l-48p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-034",
@@ -633,7 +743,9 @@ window.SEED = {
    "notas": "48×1G datos, 4×1G uplink",
    "consumo": 75,
    "peso": 6.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/cisco-c9200l-48p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-035",
@@ -646,7 +758,9 @@ window.SEED = {
    "notas": "48×1G PoE+, 4×1G uplink, PoE 740 W (1440 W con 2 fuentes)",
    "consumo": 110,
    "peso": 6.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/cisco-c9200l-48p.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-036",
@@ -659,7 +773,9 @@ window.SEED = {
    "notas": "24×1G PoE+, 4×10G uplink, PoE 370 W",
    "consumo": 80,
    "peso": 4.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/cisco-c9200l-48p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-037",
@@ -672,7 +788,9 @@ window.SEED = {
    "notas": "48×1G PoE+, 4×10G uplink, PoE 740 W",
    "consumo": 120,
    "peso": 6.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/cisco-c9200l-48p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-038",
@@ -685,7 +803,9 @@ window.SEED = {
    "notas": "12×mGig 10G + 36×1G PoE+, 4×10G uplink, PoE 740 W",
    "consumo": 160,
    "peso": 7.5,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/cisco-c9200l-48p.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-039",
@@ -698,7 +818,9 @@ window.SEED = {
    "notas": "AXIS Camera Station; confirmar código de pedido",
    "consumo": 130,
    "peso": 10,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/axis-s1224-rack.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-040",
@@ -711,7 +833,9 @@ window.SEED = {
    "notas": "AXIS Camera Station; confirmar código de pedido",
    "consumo": 150,
    "peso": 10,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/axis-s1232-rack.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-041",
@@ -724,7 +848,9 @@ window.SEED = {
    "notas": "AXIS Camera Station; confirmar código de pedido",
    "consumo": 200,
    "peso": 15,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/axis-s1264-rack.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-042",
@@ -737,7 +863,9 @@ window.SEED = {
    "notas": "AXIS Camera Station; confirmar código de pedido",
    "consumo": 260,
    "peso": 15,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/axis-s1296-rack.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-043",
@@ -750,7 +878,9 @@ window.SEED = {
    "notas": "Módulo de comunicaciones",
    "consumo": 30,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/istar-ultra.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-044",
@@ -763,7 +893,9 @@ window.SEED = {
    "notas": "Hasta 32 lectoras por controlador",
    "consumo": 40,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/istar-ultra.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-045",
@@ -776,7 +908,9 @@ window.SEED = {
    "notas": "Montaje en pared, sin fuente",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/istar-ultra.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-046",
@@ -789,7 +923,9 @@ window.SEED = {
    "notas": "Montaje en pared, sin fuente",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/istar-ultra.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-047",
@@ -802,7 +938,9 @@ window.SEED = {
    "notas": "IP, con gabinete metálico",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/kantech-kt-400.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-048",
@@ -815,7 +953,9 @@ window.SEED = {
    "notas": "Hinged wall mount bracket, 6.26\" prof., carga 10 lb",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/soporte-pared-wbh.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-049",
@@ -828,7 +968,9 @@ window.SEED = {
    "notas": "Hinged wall mount bracket, 6.26\" prof., carga 20 lb",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/soporte-pared-wbh.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-050",
@@ -841,7 +983,9 @@ window.SEED = {
    "notas": "Hinged wall mount bracket, 6.26\" prof., carga 30 lb",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/soporte-pared-wbh.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-051",
@@ -854,7 +998,9 @@ window.SEED = {
    "notas": "Hinged wall mount bracket, 6.26\" prof., carga 40 lb",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/soporte-pared-wbh.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-052",
@@ -867,7 +1013,9 @@ window.SEED = {
    "notas": "Hinged wall mount bracket, 15.8\" prof., carga 40 lb",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/soporte-pared-wbh.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-053",
@@ -880,7 +1028,9 @@ window.SEED = {
    "notas": "Hinged wall mount bracket, 15.8\" prof., carga 60 lb",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/soporte-pared-wbh.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-054",
@@ -893,7 +1043,9 @@ window.SEED = {
    "notas": "Negro",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-pared-panzone.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-055",
@@ -906,7 +1058,9 @@ window.SEED = {
    "notas": "Negro",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-pared-panzone.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-056",
@@ -919,7 +1073,9 @@ window.SEED = {
    "notas": "Negro",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-pared-panzone.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-057",
@@ -932,7 +1088,9 @@ window.SEED = {
    "notas": "Negro",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-pared-panzone.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-058",
@@ -945,7 +1103,9 @@ window.SEED = {
    "notas": "Negro",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-pared-panzone.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-059",
@@ -958,7 +1118,9 @@ window.SEED = {
    "notas": "Negro",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-pared-panzone.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-060",
@@ -971,7 +1133,9 @@ window.SEED = {
    "notas": "Negro",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-pared-panzone.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-061",
@@ -984,7 +1148,9 @@ window.SEED = {
    "notas": "Negro",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-pared-panzone.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-062",
@@ -997,7 +1163,9 @@ window.SEED = {
    "notas": "Access power controller, salidas con fusible",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/altronix-maximal1rh.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-063",
@@ -1010,7 +1178,9 @@ window.SEED = {
    "notas": "Access power controller",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/altronix-maximal1r.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-064",
@@ -1023,7 +1193,9 @@ window.SEED = {
    "notas": "Access power controller",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/altronix-maximal3rh.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-065",
@@ -1036,7 +1208,9 @@ window.SEED = {
    "notas": "Access power controller",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/altronix-maximal3r.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-066",
@@ -1049,7 +1223,9 @@ window.SEED = {
    "notas": "Access power controller, 2 fuentes",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/altronix-maximal3r.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-067",
@@ -1062,7 +1238,9 @@ window.SEED = {
    "notas": "2 canales, 300 W/canal a 4-8 Ω y 70/100 V; versión BL con BLU link",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/crown-cdi-2300.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-068",
@@ -1075,7 +1253,9 @@ window.SEED = {
    "notas": "4 canales, 300 W/canal a 4-8 Ω y 70/100 V",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/crown-cdi-4300.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-069",
@@ -1088,7 +1268,9 @@ window.SEED = {
    "notas": "2 canales, 600 W/canal a 4-8 Ω y 70/100 V",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/crown-cdi-2600.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-070",
@@ -1101,7 +1283,9 @@ window.SEED = {
    "notas": "4 canales, 600 W/canal a 4-8 Ω y 70/100 V",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/crown-cdi-4600.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-071",
@@ -1114,7 +1298,9 @@ window.SEED = {
    "notas": "2 canales, 1200 W/canal a 4-8 Ω y 70/100 V",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/crown-cdi-21200.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-072",
@@ -1127,7 +1313,9 @@ window.SEED = {
    "notas": "4 canales, 1200 W/canal a 4-8 Ω y 70/100 V",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/crown-cdi-41200.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-073",
@@ -1140,7 +1328,9 @@ window.SEED = {
    "notas": "DSP, BLU link 48 canales",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/bss-blu-100.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-074",
@@ -1153,7 +1343,9 @@ window.SEED = {
    "notas": "1RU medio rack, 64×64 Dante, BLU link 256 canales",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/bss-blu-da.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-075",
@@ -1166,7 +1358,9 @@ window.SEED = {
    "notas": "Requiere kit de rack MB-36 (3U)",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/toa-vm-2120.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-076",
@@ -1179,7 +1373,9 @@ window.SEED = {
    "notas": "Requiere kit de rack MB-36 (3U)",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/toa-vm-2240.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-077",
@@ -1192,7 +1388,9 @@ window.SEED = {
    "notas": "4K60, Dante AV-H, PoE+",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/amx-nmx-dec-n3322d.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-078",
@@ -1205,7 +1403,9 @@ window.SEED = {
    "notas": "Para VM-2000",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/toa-rm-200m.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-079",
@@ -1218,7 +1418,9 @@ window.SEED = {
    "notas": "100 W, 70/100 V, interior/exterior",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/bose-ds-100se.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-080",
@@ -1231,7 +1433,9 @@ window.SEED = {
    "notas": "100 W, 70/100 V, cielo",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/bose-ds-100f.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-081",
@@ -1244,7 +1448,9 @@ window.SEED = {
    "notas": "16 W, 70/100 V, cielo",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/bose-ds-16f.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-082",
@@ -1257,7 +1463,9 @@ window.SEED = {
    "notas": "Exterior, 360°",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/bose-fs-360p-ii.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-083",
@@ -1270,7 +1478,9 @@ window.SEED = {
    "notas": "Panduit FlexFusion XGL",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-flexfusion.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-084",
@@ -1283,7 +1493,9 @@ window.SEED = {
    "notas": "Panduit FlexFusion XGL",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-flexfusion.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-085",
@@ -1296,7 +1508,9 @@ window.SEED = {
    "notas": "Panduit FlexFusion XGL",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-flexfusion.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-086",
@@ -1309,7 +1523,9 @@ window.SEED = {
    "notas": "Panduit FlexFusion XGL; ancho para gestión de cable",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-flexfusion.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-087",
@@ -1322,7 +1538,9 @@ window.SEED = {
    "notas": "Panduit FlexFusion XGL",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-flexfusion.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-088",
@@ -1335,7 +1553,9 @@ window.SEED = {
    "notas": "Panduit FlexFusion XGL",
    "consumo": 0,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gab-flexfusion.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-089",
@@ -1348,7 +1568,9 @@ window.SEED = {
    "notas": "NEMA 5-15R",
    "consumo": 0,
    "peso": 3,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/pdu-horizontal-1u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-090",
@@ -1361,7 +1583,9 @@ window.SEED = {
    "notas": "NEMA 5-20R",
    "consumo": 0,
    "peso": 3,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/pdu-horizontal-1u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-091",
@@ -1374,7 +1598,9 @@ window.SEED = {
    "notas": "Online / interactiva según diseño",
    "consumo": 60,
    "peso": 25,
-   "capacidad": 1200
+   "capacidad": 1200,
+   "imagen": "img/catalogo/apc-smt3000rm2u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-092",
@@ -1387,7 +1613,9 @@ window.SEED = {
    "notas": "Online / interactiva según diseño",
    "consumo": 100,
    "peso": 40,
-   "capacidad": 2400
+   "capacidad": 2400,
+   "imagen": "img/catalogo/apc-smt3000rm2u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-093",
@@ -1413,7 +1641,9 @@ window.SEED = {
    "notas": "Para equipos no montables",
    "consumo": 0,
    "peso": 3,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/bandeja-fija-2u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-095",
@@ -1439,7 +1669,9 @@ window.SEED = {
    "notas": "NetRunner con clips de radio de curvatura",
    "consumo": 0,
    "peso": 2,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/wmph2e.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-097",
@@ -1556,7 +1788,9 @@ window.SEED = {
    "notas": "Smart-UPS 3000 VA LCD RM 2U 120 V",
    "consumo": 100,
    "peso": 36,
-   "capacidad": 2700
+   "capacidad": 2700,
+   "imagen": "img/catalogo/apc-smt3000rm2u.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-106",
@@ -1582,7 +1816,9 @@ window.SEED = {
    "notas": "RJ45, 10GBASE-T",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/jack-cj6x88tgbu.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-108",
@@ -1595,7 +1831,9 @@ window.SEED = {
    "notas": "RJ45, Cat 6",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/jack-cj6x88tgbu.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-109",

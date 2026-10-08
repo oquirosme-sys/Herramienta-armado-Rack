@@ -28,7 +28,7 @@
             h('div', null, h('h3', null, c.nombre), c.descripcion ? h('p', null, c.descripcion) : h('p', { class: 'muted' }, 'Sin descripción: el administrador puede agregarla en Administración ▸ Categorías.')),
             imgs.length ? h('div', { class: 'gl-imgs' }, imgs.map(s => h('img', { src: s, alt: c.nombre, loading: 'lazy' }))) : null),
           shown.length ? h('div', { class: 'gl-items' }, shown.map(i => h('div', { class: 'gl-it' }, UI.thumb(i, c.color, 64),
-            h('div', null, h('b', null, i.descripcion), h('div', { class: 'muted' }, [i.marca, i.parte].filter(x => x && x !== 'Por definir').join(' · ') || 'Marca y parte por definir'),
+            h('div', null, h('b', null, i.descripcion), h('div', { class: 'muted' }, [i.marca, i.parte].filter(x => x && x !== 'Por definir').join(' · ') || 'Marca y parte por definir', i.imagenRef ? ' · imagen referencial' : ''),
               h('div', { class: 'muted' }, [i.ru > 0 ? i.ru + ' RU' : '', i.puertos ? i.puertos + ' puertos' : '', i.consumo ? '≈ ' + i.consumo + ' W' : '', i.notas].filter(Boolean).join(' · ')))))) : null]));
         host.lastChild.querySelector('.card-h').remove();
       });
@@ -36,7 +36,7 @@
     }
     root.appendChild(h('div', { class: 'stack' },
       h('div', { class: 'room-head' }, h('div', null, h('h2', null, 'Glosario de equipos'), h('p', { class: 'muted' }, 'Qué es cada equipo del rack, para qué sirve y cómo se ve. Las imágenes y textos los mantiene el administrador.')), h('div', { class: 'toolbar no-print' }, search)),
-      host));
+      host, h('p', { class: 'hint' }, 'Imágenes de producto: propiedad de sus fabricantes (Panduit, Cisco, Axis, APC, Crown, TOA, Bose y otros), usadas con fines didácticos. "Imagen referencial" = foto de otro modelo de la misma familia.')));
     fill();
   }
 

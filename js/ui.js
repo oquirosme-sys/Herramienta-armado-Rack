@@ -68,7 +68,7 @@
     /** Miniatura del equipo: su imagen o un recuadro con el color de su categoría. */
     thumb(item, color, size) {
       const s = (size || 56) + 'px';
-      if (item && item.imagen) return h('img', { class: 'thumb', src: item.imagen, alt: item.descripcion, loading: 'lazy', style: { width: s, height: s } });
+      if (item && item.imagen) return h('img', { class: 'thumb', src: item.imagen, alt: item.descripcion, loading: 'lazy', title: item.imagenRef ? 'Imagen referencial (producto de la misma familia)' : item.descripcion, style: { width: s, height: s } });
       return h('div', { class: 'thumb ph', style: { width: s, height: s, background: color || '#E7E6E6' }, title: 'Sin imagen' }, item ? (item.categoria || '').slice(0, 3).toUpperCase() : '');
     },
     /** Selector de imagen (subir archivo o pegar enlace). get/set leen y guardan el valor. */

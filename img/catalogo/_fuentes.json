@@ -1,0 +1,487 @@
+{
+ "it-001": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110688904 (panduit.com)",
+  "referencial": false,
+  "file": "img/catalogo/rack-r2p.jpg"
+ },
+ "it-002": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110688904 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/rack-r2p.jpg"
+ },
+ "it-003": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110688904 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/rack-r2p.jpg"
+ },
+ "it-004": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110688904 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/rack-r2p.jpg"
+ },
+ "it-005": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110082257 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-pr2.jpg"
+ },
+ "it-006": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110082257 (panduit.com)",
+  "referencial": false,
+  "file": "img/catalogo/org-vert-pr2.jpg"
+ },
+ "it-007": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110082257 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-pr2.jpg"
+ },
+ "it-008": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110082257 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-pr2.jpg"
+ },
+ "it-009": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110082257 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-pr2.jpg"
+ },
+ "it-010": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110082257 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-pr2.jpg"
+ },
+ "it-011": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110082257 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-pr2.jpg"
+ },
+ "it-012": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110082257 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-pr2.jpg"
+ },
+ "it-013": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110668946 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-netrunner.jpg"
+ },
+ "it-014": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110668946 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/org-vert-netrunner.jpg"
+ },
+ "it-048": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110689023 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/soporte-pared-wbh.jpg"
+ },
+ "it-049": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110689023 (panduit.com)",
+  "referencial": false,
+  "file": "img/catalogo/soporte-pared-wbh.jpg"
+ },
+ "it-050": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110689023 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/soporte-pared-wbh.jpg"
+ },
+ "it-051": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110689023 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/soporte-pared-wbh.jpg"
+ },
+ "it-052": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110689023 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/soporte-pared-wbh.jpg"
+ },
+ "it-053": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110689023 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/soporte-pared-wbh.jpg"
+ },
+ "it-054": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/111653080 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-pared-panzone.jpg"
+ },
+ "it-055": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/111653080 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-pared-panzone.jpg"
+ },
+ "it-056": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/111653080 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-pared-panzone.jpg"
+ },
+ "it-057": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/111653080 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-pared-panzone.jpg"
+ },
+ "it-058": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/111653080 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-pared-panzone.jpg"
+ },
+ "it-059": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/111653080 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-pared-panzone.jpg"
+ },
+ "it-060": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/111653080 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-pared-panzone.jpg"
+ },
+ "it-061": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/111653080 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-pared-panzone.jpg"
+ },
+ "it-083": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110657111 (panduit.com)",
+  "referencial": false,
+  "file": "img/catalogo/gab-flexfusion.jpg"
+ },
+ "it-084": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110657111 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-flexfusion.jpg"
+ },
+ "it-085": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110657111 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-flexfusion.jpg"
+ },
+ "it-086": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110657111 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-flexfusion.jpg"
+ },
+ "it-087": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110657111 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-flexfusion.jpg"
+ },
+ "it-088": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/110657111 (panduit.com)",
+  "referencial": true,
+  "file": "img/catalogo/gab-flexfusion.jpg"
+ },
+ "it-015": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/CPP24FMWBLY_01",
+  "referencial": false,
+  "file": "img/catalogo/pp-24-plano.jpg"
+ },
+ "it-016": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/CPP24FMWBLY_01",
+  "referencial": true,
+  "file": "img/catalogo/pp-24-plano.jpg"
+ },
+ "it-017": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/CPPA24FMWBLY_01",
+  "referencial": false,
+  "file": "img/catalogo/pp-24-angulado.jpg"
+ },
+ "it-018": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/CPPA24FMWBLY_01",
+  "referencial": true,
+  "file": "img/catalogo/pp-24-angulado.jpg"
+ },
+ "it-019": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/CPP48HDWBLY_01",
+  "referencial": false,
+  "file": "img/catalogo/pp-48-hd-plano.jpg"
+ },
+ "it-020": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/CPPA48HDWBLY_01",
+  "referencial": false,
+  "file": "img/catalogo/pp-48-hd-angulado.jpg"
+ },
+ "it-021": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/NMF1_01",
+  "referencial": false,
+  "file": "img/catalogo/nmf1.jpg"
+ },
+ "it-022": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/NM1_01",
+  "referencial": false,
+  "file": "img/catalogo/nm1.jpg"
+ },
+ "it-023": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/NMF2_01",
+  "referencial": false,
+  "file": "img/catalogo/nmf2.jpg"
+ },
+ "it-024": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/NM2_01",
+  "referencial": false,
+  "file": "img/catalogo/nm2.jpg"
+ },
+ "it-025": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/WMPFSE_01",
+  "referencial": false,
+  "file": "img/catalogo/wmpfse.jpg"
+ },
+ "it-026": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/WMPF1E_01",
+  "referencial": false,
+  "file": "img/catalogo/wmpf1e.jpg"
+ },
+ "it-027": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/WMPSE_01",
+  "referencial": false,
+  "file": "img/catalogo/wmpse.jpg"
+ },
+ "it-028": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/WMP1E_01",
+  "referencial": false,
+  "file": "img/catalogo/wmp1e.jpg"
+ },
+ "it-096": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/WMPH2E_01",
+  "referencial": false,
+  "file": "img/catalogo/wmph2e.jpg"
+ },
+ "it-029": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/FCE1U",
+  "referencial": false,
+  "file": "img/catalogo/fce1u.jpg"
+ },
+ "it-030": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/FCE1U",
+  "referencial": true,
+  "file": "img/catalogo/fce1u.jpg"
+ },
+ "it-031": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/FCE1U",
+  "referencial": true,
+  "file": "img/catalogo/fce1u.jpg"
+ },
+ "it-107": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/CJ6X88TGBU",
+  "referencial": false,
+  "file": "img/catalogo/jack-cj6x88tgbu.jpg"
+ },
+ "it-108": {
+  "source": "https://s7d9.scene7.com/is/image/panduitdm/CJ6X88TGBU",
+  "referencial": true,
+  "file": "img/catalogo/jack-cj6x88tgbu.jpg"
+ },
+ "it-032": {
+  "source": "https://www.panacompu.com/panama/en/product-information/cisco-c9200l-switch-48-ports-gigabit-ethernet-poe-104gbps",
+  "referencial": true,
+  "file": "img/catalogo/cisco-c9200l-48p.jpg"
+ },
+ "it-033": {
+  "source": "https://www.panacompu.com/panama/en/product-information/cisco-c9200l-switch-48-ports-gigabit-ethernet-poe-104gbps",
+  "referencial": true,
+  "file": "img/catalogo/cisco-c9200l-48p.jpg"
+ },
+ "it-034": {
+  "source": "https://www.panacompu.com/panama/en/product-information/cisco-c9200l-switch-48-ports-gigabit-ethernet-poe-104gbps",
+  "referencial": true,
+  "file": "img/catalogo/cisco-c9200l-48p.jpg"
+ },
+ "it-036": {
+  "source": "https://www.panacompu.com/panama/en/product-information/cisco-c9200l-switch-48-ports-gigabit-ethernet-poe-104gbps",
+  "referencial": true,
+  "file": "img/catalogo/cisco-c9200l-48p.jpg"
+ },
+ "it-037": {
+  "source": "https://www.panacompu.com/panama/en/product-information/cisco-c9200l-switch-48-ports-gigabit-ethernet-poe-104gbps",
+  "referencial": true,
+  "file": "img/catalogo/cisco-c9200l-48p.jpg"
+ },
+ "it-038": {
+  "source": "https://www.panacompu.com/panama/en/product-information/cisco-c9200l-switch-48-ports-gigabit-ethernet-poe-104gbps",
+  "referencial": true,
+  "file": "img/catalogo/cisco-c9200l-48p.jpg"
+ },
+ "it-035": {
+  "source": "https://www.panacompu.com/panama/en/product-information/cisco-c9200l-switch-48-ports-gigabit-ethernet-poe-104gbps",
+  "referencial": false,
+  "file": "img/catalogo/cisco-c9200l-48p.jpg"
+ },
+ "it-039": {
+  "source": "https://www.axis.com/products/axis-s1224-rack",
+  "referencial": false,
+  "file": "img/catalogo/axis-s1224-rack.jpg"
+ },
+ "it-040": {
+  "source": "https://www.axis.com/products/axis-s1232-rack",
+  "referencial": false,
+  "file": "img/catalogo/axis-s1232-rack.jpg"
+ },
+ "it-041": {
+  "source": "https://www.axis.com/products/axis-s1264-rack",
+  "referencial": false,
+  "file": "img/catalogo/axis-s1264-rack.jpg"
+ },
+ "it-042": {
+  "source": "https://www.axis.com/products/axis-s1296-rack",
+  "referencial": false,
+  "file": "img/catalogo/axis-s1296-rack.jpg"
+ },
+ "it-043": {
+  "source": "https://www.securityinformed.com/software-house-ustar-acm-4u-access-control-controller-technical-details.html",
+  "referencial": true,
+  "file": "img/catalogo/istar-ultra.jpg"
+ },
+ "it-044": {
+  "source": "https://www.securityinformed.com/software-house-ustar-acm-4u-access-control-controller-technical-details.html",
+  "referencial": true,
+  "file": "img/catalogo/istar-ultra.jpg"
+ },
+ "it-045": {
+  "source": "https://www.securityinformed.com/software-house-ustar-acm-4u-access-control-controller-technical-details.html",
+  "referencial": true,
+  "file": "img/catalogo/istar-ultra.jpg"
+ },
+ "it-046": {
+  "source": "https://www.securityinformed.com/software-house-ustar-acm-4u-access-control-controller-technical-details.html",
+  "referencial": true,
+  "file": "img/catalogo/istar-ultra.jpg"
+ },
+ "it-047": {
+  "source": "https://s3.amazonaws.com/s3-absupply-net/images/Kantech_KT-400_lg.jpg",
+  "referencial": false,
+  "file": "img/catalogo/kantech-kt-400.jpg"
+ },
+ "it-062": {
+  "source": "https://www.altronix.com/images/products/maximal1rh/large/0.jpg",
+  "referencial": false,
+  "file": "img/catalogo/altronix-maximal1rh.jpg"
+ },
+ "it-063": {
+  "source": "https://www.altronix.com/images/products/maximal1r/large/0.jpg",
+  "referencial": false,
+  "file": "img/catalogo/altronix-maximal1r.jpg"
+ },
+ "it-064": {
+  "source": "https://www.altronix.com/images/products/maximal3rh/large/0.jpg",
+  "referencial": false,
+  "file": "img/catalogo/altronix-maximal3rh.jpg"
+ },
+ "it-065": {
+  "source": "https://www.altronix.com/images/products/maximal3r/large/0.jpg",
+  "referencial": false,
+  "file": "img/catalogo/altronix-maximal3r.jpg"
+ },
+ "it-066": {
+  "source": "https://www.altronix.com/images/products/maximal3r/large/0.jpg",
+  "referencial": true,
+  "file": "img/catalogo/altronix-maximal3r.jpg"
+ },
+ "it-067": {
+  "source": "https://jblpro.com/en/products/cdi-2-300",
+  "referencial": false,
+  "file": "img/catalogo/crown-cdi-2300.jpg"
+ },
+ "it-068": {
+  "source": "https://jblpro.com/en/products/cdi-4-300",
+  "referencial": false,
+  "file": "img/catalogo/crown-cdi-4300.jpg"
+ },
+ "it-069": {
+  "source": "https://jblpro.com/en/products/cdi-2-600",
+  "referencial": false,
+  "file": "img/catalogo/crown-cdi-2600.jpg"
+ },
+ "it-070": {
+  "source": "https://jblpro.com/en/products/cdi-4-600",
+  "referencial": false,
+  "file": "img/catalogo/crown-cdi-4600.jpg"
+ },
+ "it-071": {
+  "source": "https://jblpro.com/en/products/cdi-2-1200",
+  "referencial": false,
+  "file": "img/catalogo/crown-cdi-21200.jpg"
+ },
+ "it-072": {
+  "source": "https://jblpro.com/en/products/cdi-4-1200",
+  "referencial": false,
+  "file": "img/catalogo/crown-cdi-41200.jpg"
+ },
+ "it-073": {
+  "source": "https://jblpro.com/en-US/products/blu-100/1005",
+  "referencial": false,
+  "file": "img/catalogo/bss-blu-100.jpg"
+ },
+ "it-074": {
+  "source": "https://jblpro.com/en-US/products/blu-da/1005",
+  "referencial": false,
+  "file": "img/catalogo/bss-blu-da.jpg"
+ },
+ "it-075": {
+  "source": "https://www.toa.eu/products/vm-2240-er/ (foto de la serie VM-2000, muestra VM-2240)",
+  "referencial": true,
+  "file": "img/catalogo/toa-vm-2120.jpg"
+ },
+ "it-076": {
+  "source": "https://www.toa.eu/products/vm-2240-er/",
+  "referencial": false,
+  "file": "img/catalogo/toa-vm-2240.jpg"
+ },
+ "it-077": {
+  "source": "https://soundpro.com/products/amx-amx-n33d001-nmx-dec-n3322d",
+  "referencial": false,
+  "file": "img/catalogo/amx-nmx-dec-n3322d.jpg"
+ },
+ "it-078": {
+  "source": "https://www.toaelectronics.com/en-us/products/detail/rm200ms",
+  "referencial": false,
+  "file": "img/catalogo/toa-rm-200m.jpg"
+ },
+ "it-079": {
+  "source": "https://www.avlfx.com/category/product/2235-bose-professional-freespace-ds-100se-loudspeaker-black-white/category_pathway-31",
+  "referencial": false,
+  "file": "img/catalogo/bose-ds-100se.jpg"
+ },
+ "it-080": {
+  "source": "https://www.avlfx.com/category/product/2234-bose-professional-freespace-ds-100f-loudspeaker-white/category_pathway-31",
+  "referencial": false,
+  "file": "img/catalogo/bose-ds-100f.jpg"
+ },
+ "it-081": {
+  "source": "https://www.avlfx.com/category/product/2225-bose-freespace-ds-16f/category_pathway-31",
+  "referencial": false,
+  "file": "img/catalogo/bose-ds-16f.jpg"
+ },
+ "it-082": {
+  "source": "https://www.avlfx.com/category/product/2273-bose-professional-freespace-360p-series-ii-environmental-loudspeaker-green/category_pathway-31",
+  "referencial": false,
+  "file": "img/catalogo/bose-fs-360p-ii.jpg"
+ },
+ "it-089": {
+  "source": "https://avlgear.com/products/middle-atlantic-pd-915r-pl-pd-series-rackmount-power-15a-9-outlet-black (Middle Atlantic PD-915R-PL)",
+  "referencial": true,
+  "file": "img/catalogo/pdu-horizontal-1u.jpg"
+ },
+ "it-090": {
+  "source": "https://avlgear.com/products/middle-atlantic-pd-915r-pl-pd-series-rackmount-power-15a-9-outlet-black (Middle Atlantic PD-915R-PL)",
+  "referencial": true,
+  "file": "img/catalogo/pdu-horizontal-1u.jpg"
+ },
+ "it-091": {
+  "source": "https://avlgear.com/products/apc-smt3000rm2u-smart-ups-3000va-rm-2u-lcd-120v-with-smartconnect (APC Smart-UPS 2U, referencial)",
+  "referencial": true,
+  "file": "img/catalogo/apc-smt3000rm2u.jpg"
+ },
+ "it-092": {
+  "source": "https://avlgear.com/products/apc-smt3000rm2u-smart-ups-3000va-rm-2u-lcd-120v-with-smartconnect (APC Smart-UPS 2U, referencial)",
+  "referencial": true,
+  "file": "img/catalogo/apc-smt3000rm2u.jpg"
+ },
+ "it-094": {
+  "source": "https://creationnetworks.net/products/middle-atlantic-u2-double-space-rack-shelf-black-powder-coat (Middle Atlantic U2)",
+  "referencial": true,
+  "file": "img/catalogo/bandeja-fija-2u.jpg"
+ },
+ "it-105": {
+  "source": "https://avlgear.com/products/apc-smt3000rm2u-smart-ups-3000va-rm-2u-lcd-120v-with-smartconnect",
+  "referencial": false,
+  "file": "img/catalogo/apc-smt3000rm2u.jpg"
+ }
+}

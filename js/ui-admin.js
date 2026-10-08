@@ -90,7 +90,7 @@
         const out = isNew || !src.id ? { id: Store.nextItemId() } : cat.items.find(x => x.id === src.id);
         out.categoria = d.categoria.value; out.descripcion = desc; out.marca = d.marca.value.trim(); out.parte = d.parte.value.trim(); out.notas = notas.value.trim();
         ['ru', 'puertos', 'consumo', 'peso', 'capacidad', 'largoPieza'].forEach(k => { out[k] = d[k] ? U.toNum(d[k].value) : null; });
-        out.unidad = d.unidad.value.trim() || 'm'; out.imagen = it.imagen || '';
+        out.unidad = d.unidad.value.trim() || 'm'; out.imagen = it.imagen || ''; out.imagenRef = it.imagenRef && it.imagen === (src.imagen || '') ? true : false;
         if (out.marca && !cat.marcas.includes(out.marca)) { cat.marcas.push(out.marca); cat.marcas.sort((a, b) => a.localeCompare(b)); }
         if (!cat.items.includes(out)) cat.items.push(out);
         Store.saveCatalog(); redraw(); UI.toast('Catálogo actualizado.');
