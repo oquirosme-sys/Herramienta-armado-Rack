@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prueba del motor de cálculo</title>
+  <style>
+    body { font: 14px system-ui, sans-serif; margin: 1rem; background: #fff; color: #1d2733; }
+    table { border-collapse: collapse; font-size: 12px; } td, th { border: 1px solid #ccc; padding: 2px 6px; text-align: right; }
+    .ok { color: #1b7f4b; } .bad { color: #b42318; font-weight: 600; } h2 { font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <h1>Motor de cálculo vs. Excel (bloque Machote de ANACAR)</h1>
+  <p id="sum"></p>
+  <div id="out"></div>
+  <script src="../js/data/seed.js"></script>
+  <script src="../js/calc.js"></script>
+  <script src="machote.js"></script>
+  <script>
+    const out = document.getElementById('out'), fails = [];
+    let total = 0;
+    const eq = (a, b) => {
+      if ((a === null || a === undefined || a === '' || a === ' ') && (b === null || b === undefined || b === '' || b === ' ')) return true;
+      if (typeof b === 'number' && a !== null && a !== '' && !isNaN(Number(a))) return Math.abs(Number(a) - b) < 1e-6 * Math.max(1, Math.abs(b));
+      return String(a).trim() === String(b).trim();
+    };
+    function check(nombre, real, esperado) { total++; const ok = eq(real, esperado); if (!ok) fails.push([nombre, real, esperado]); return ok; }
+
+    const P = { tableros: [MACHOTE.tablero], cvMaxTotal: 5, iccLongMax: 20 };
+    const R = Calc.proyecto(P, window.SEED).orden[0];
+    const E = MACHOTE.esperado;
+    MACHOTE.tablero.circuitos.forEach((cc, i) => {
+      const x = R.rows.find(r => r.c.id === cc.id), e = E.circuitos[i];
+      check('c' + i + ' U', x.fase[0], e.U); check('c' + i + ' V', x.fase[1], e.V); check('c' + i + ' W', x.fase[2], e.W);
+      check('c' + i + ' AA', x.I[0], e.AA); check('c' + i + ' AE', x.AE, e.AE); check('c' + i + ' AF', x.AF, e.AF);
+      check('c' + i + ' AL', x.AL, e.AL); check('c' + i + ' AN', x.AN, e.AN); check('c' + i + ' AP', x.AP, e.AP); check('c' + i + ' AR', x.AR, e.AR);
+      check('c' + i + ' AS', x.AS, e.AS); check('c' + i + ' AT', x.AT, e.AT); check('c' + i + ' AU', x.AU, e.AU); check('c' + i + ' AV', x.AV, e.AV); check('c' + i + ' AY', x.AY, e.AY);
+    });
+    const T = E.totales, A = R.alim;
+    [['J116', R.J116], ['U116', R.U116[0]], ['V116', R.U116[1]], ['W116', R.U116[2]], ['U118', R.desbalance], ['W128', R.W128], ['W129', R.W129], ['W130', R.W130],
+     ['J134', R.J134], ['K131', R.tipos.find(t => t.tipo.id === 2).fd], ['L139', A.L139], ['R139', A.R139], ['AA139', A.AA139[0]], ['AB139', A.AA139[1]], ['AC139', A.AA139[2]],
+     ['AE139', A.AE139], ['AF139', A.AF139], ['AL139', A.AL139], ['AN139', A.AN139], ['AP139', A.AP139], ['AP140', A.AP140], ['AR139', A.AR139], ['AS139', A.AS139], ['AT139', A.AT139],
+     ['AV139', A.AV139], ['AW139', A.AW139], ['AX139', A.AX139], ['AY139', A.AY139], ['AW140', A.AW140], ['BA139', R.bkMain && R.bkMain.modelo], ['BJ11', R.cat && R.cat.modelo],
+     ['BJ16', R.spd && R.spd.modelo], ['AJ10', A.ampCond * A.tempF * A.agrF], ['AE10', A.ampReq]]
+      .forEach(([k, v]) => check(k, v, T[k]));
+
+    // Cascada: un tablero derivado debe partir del voltaje en bornes del principal y acumular su caída
+    const hijo = { id: 't2', prefijo: 'TABLERO', nombre: 'TB', fases: 3, voltaje: 208, hilos: 4, sistema: '120/208', reserva: 0, longitud: 30, padreId: 't1', alim: { material: 'CU', aislamiento: 'THHN' },
+      circuitos: [{ id: 'h1', polos: [1], detalleId: 8, kva: 1.5, longitud: 15 }, { id: 'h2', polos: [2], detalleId: 8, kva: 1.5, longitud: 15 }] };
+    const padre = JSON.parse(JSON.stringify(MACHOTE.tablero)); padre.circuitos.push({ id: 'x', polos: [61, 63, 65], detalleId: 19, tableroHijoId: 't2', longitud: 30 });
+    const Q = Calc.proyecto({ tableros: [padre, hijo], cvMaxTotal: 5, iccLongMax: 20 }, window.SEED);
+    const rp = Q.res.t1, rh = Q.res.t2;
+    check('Cascada: inicio del hijo = bornes del padre', rh.alim.vInicio, rp.alim.AW139);
+    check('Cascada: caída acumulada del hijo > padre', rh.alim.AY139 > rp.alim.AY139, true);
+    check('Cascada: kVA del circuito = kVA totales del hijo', rp.rows.find(x => x.c.id === 'x').J, rh.W130);
+    check('Cascada: Icc del hijo < Icc del padre', rh.iccA < rp.iccA, true);
+    check('Cascada: el hijo nombra a su padre', rh.alimentadoDesde, 'TABLERO Machote');
+
+    document.getElementById('sum').innerHTML = fails.length ? '<b class="bad">' + fails.length + ' de ' + total + ' comprobaciones fallaron</b>' : '<b class="ok">' + total + ' de ' + total + ' comprobaciones correctas</b>';
+    out.innerHTML = fails.length ? '<table><tr><th>Valor</th><th>Herramienta</th><th>Excel</th></tr>' + fails.map(f => '<tr><td style="text-align:left">' + f[0] + '</td><td>' + f[1] + '</td><td>' + f[2] + '</td></tr>').join('') + '</table>' : '';
+    window.RESULT = { total, fails };
+  </script>
+</body>
+</html>

@@ -60,6 +60,8 @@
       window.SEED.tiposSalida.forEach(t => {
         if (!cat.tiposSalida.some(x => x.codigo === t.codigo)) { const i = cat.tiposSalida.findIndex(x => x.codigo === '-'); cat.tiposSalida.splice(i < 0 ? cat.tiposSalida.length : i, 0, U.clone(t)); }
       });
+      // piezas nuevas del catálogo inicial (ids it-sNN) que el catálogo guardado aún no tiene
+      window.SEED.items.forEach(si => { if (/^it-s\d+$/.test(si.id) && !cat.items.some(x => x.id === si.id)) cat.items.push(U.clone(si)); });
       // categorías guardadas antes de existir el glosario: completar descripción
       // imágenes de fabricante incluidas en el catálogo inicial: completar las piezas que aún no tienen (una imagen quitada por el administrador queda vacía y no se repone)
       cat.items.forEach(it => { if (it.imagen === undefined) { const si = window.SEED.items.find(x => x.id === it.id && x.descripcion === it.descripcion); if (si && si.imagen) { it.imagen = si.imagen; it.imagenRef = si.imagenRef; } } });

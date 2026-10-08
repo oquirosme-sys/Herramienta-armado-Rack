@@ -178,3 +178,5 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
 ::placeholder { color: var(--muted); opacity: .55; font-style: italic; }
 input:not([type=checkbox]):not([type=color]):not([type=file]):not(:disabled), textarea { border-color: #b7d9ae; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) input:not([type=checkbox]):not([type=color]):not([type=file]):not(:disabled), :root:not([data-theme="light"]) textarea { border-color: #2f5a3a; } }
+
+.auto-badge { display: block; margin: 2px auto 0; font-size: .6rem; padding: 0 4px; border-radius: 8px; border: 1px solid var(--brand); color: var(--brand); background: var(--brand-soft); cursor: pointer; line-height: 1.3; } span.auto-badge { cursor: default; }

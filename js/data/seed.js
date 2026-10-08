@@ -2065,6 +2065,36 @@ window.SEED = {
    "largoPieza": null,
    "imagen": "img/catalogo/gen-fibra-os2.jpg",
    "imagenRef": true
+  },
+  {
+   "id": "it-s01",
+   "categoria": "PDU",
+   "descripcion": "PDU vertical 0U 24 tomas 120 V 20 A (gabinete)",
+   "marca": "Por definir",
+   "parte": "Por definir",
+   "ru": null,
+   "puertos": null,
+   "notas": "Montaje vertical lateral (0U); no ocupa RU",
+   "consumo": 0,
+   "peso": null,
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-pdu-vertical.jpg",
+   "imagenRef": true
+  },
+  {
+   "id": "it-s02",
+   "categoria": "Puesta a tierra",
+   "descripcion": "Barra de tierra vertical para gabinete",
+   "marca": "Por definir",
+   "parte": "Por definir",
+   "ru": null,
+   "puertos": null,
+   "notas": "Montaje vertical (0U); no ocupa RU",
+   "consumo": 0,
+   "peso": null,
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-barra-vertical.jpg",
+   "imagenRef": true
   }
  ],
  "marcas": [

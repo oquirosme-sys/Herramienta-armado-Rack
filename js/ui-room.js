@@ -95,7 +95,7 @@
       const masTxt = () => { masBtn.textContent = (eq.mas && eq.mas.length) ? '+' + eq.mas.length : '+ tipo'; };
       masTxt();
       const tr = h('tr', null,
-        h('td', { class: 'num' }, i + 1), h('td', { class: 'c-eq' }, sel, ptxt), cPart, cRU, cPt, cSup, cInf, cPanel,
+        h('td', { class: 'num' }, i + 1, eq.auto ? h('button', { type: 'button', class: 'auto-badge', title: 'Generado por el armado automático. Clic para fijarlo como manual.', onclick: ev => { eq.auto = false; Store.save(); ev.target.remove(); } }, 'auto') : null), h('td', { class: 'c-eq' }, sel, ptxt), cPart, cRU, cPt, cSup, cInf, cPanel,
         h('td', null, tipoSel), h('td', { class: 'nowrap' }, salInp, masBtn), cPct, h('td', null, notas),
         h('td', { class: 'row-actions' },
           UI.iconBtn('▲', 'Subir', () => move(i, -1)), UI.iconBtn('▼', 'Bajar', () => move(i, 1)),
@@ -142,7 +142,7 @@
         const part = h('td', { class: 'muted' });
         const sel = UI.select(fuOpts, f.itemId, v => { f.itemId = v; part.textContent = (Store.item(v) || {}).parte || ''; Store.save(); refresh(); }, { label: 'Equipo fuera del rack' });
         part.textContent = (Store.item(f.itemId) || {}).parte || '';
-        fbody.appendChild(h('tr', null, h('td', { class: 'num' }, i + 1), h('td', { class: 'c-eq' }, sel, h('span', { class: 'print-txt' }, (Store.item(f.itemId) || {}).descripcion || '')), part,
+        fbody.appendChild(h('tr', null, h('td', { class: 'num' }, i + 1, f.auto ? h('span', { class: 'auto-badge', title: 'Generado por el armado automático' }, 'auto') : null), h('td', { class: 'c-eq' }, sel, h('span', { class: 'print-txt' }, (Store.item(f.itemId) || {}).descripcion || '')), part,
           h('td', null, UI.input(f, 'cant', { type: 'number', min: 0, step: 1, class: 'w-num', after: refresh })), h('td', null, UI.input(f, 'notas')),
           h('td', { class: 'row-actions' }, UI.iconBtn('✕', 'Quitar', () => { room.fuera.splice(i, 1); Store.save(); buildOut(); refresh(); }, 'danger'))));
       });

@@ -150,7 +150,9 @@
     const racks = h('div', null,
       p.niveles.length ? h('div', { class: 'table-wrap' }, h('table', { class: 'tbl' }, h('thead', null, h('tr', null, ['Código', 'Cuarto', 'Descripción', 'Montaje', 'RU usados', 'Salidas', ''].map(t => h('th', null, t)))), tbody))
         : h('p', { class: 'empty' }, p.cuartos.length ? 'Todavía no hay racks ni gabinetes. Cada uno se asigna a un cuarto y crea su propia pestaña.' : 'Primero agregue al menos un cuarto de telecomunicaciones.'),
-      h('div', { class: 'toolbar' }, UI.btn('+ Agregar rack / gabinete', () => { if (!p.cuartos.length) { UI.alert('Primero agregue un cuarto de telecomunicaciones.'); return; } rackDialog(again); }, 'primary', p.cuartos.length ? null : 'Primero agregue un cuarto')));
+      h('div', { class: 'toolbar' }, UI.btn('+ Agregar rack / gabinete', () => { if (!p.cuartos.length) { UI.alert('Primero agregue un cuarto de telecomunicaciones.'); return; } rackDialog(again); }, 'primary', p.cuartos.length ? null : 'Primero agregue un cuarto'),
+        UI.btn('⚙ Armar racks automáticamente', () => armarDialog(again), 'primary', 'Genera patch panels, switches, fibra, UPS, energía y tapas según las salidas por servicio')),
+      h('p', { class: 'hint' }, 'El armado automático usa las salidas por servicio, las redes LAN, la reserva y la fibra troncal. Lo generado se marca como "auto" en cada rack: revíselo, cambie cualquier equipo o fíjelo (clic en "auto"). Lo que usted agregó a mano no se toca.'));
 
     /* ---------------- demanda vs oferta y fibra ---------------- */
     const derivedHost = h('div', { class: 'stack' });
@@ -197,6 +199,24 @@
       h('li', null, 'La Memoria de cálculo consolida cuartos, servicios, fibra, salidas, potencia y lista de materiales; se exporta a Word y Excel.'),
       h('li', null, 'Si necesita una marca o equipo que no está en la lista, pídaselo al administrador (el catálogo solo lo edita el administrador).'),
       h('li', null, 'Los datos se guardan en este navegador; use Archivo ▸ Exportar proyecto para respaldarlos o compartirlos.'));
+  }
+
+  function armarDialog(done) {
+    const p = Store.project;
+    if (!p.cuartos.length) { UI.alert('Primero agregue los cuartos y las salidas por servicio.'); return; }
+    const hay = p.cuartos.some(c => Object.values(Calc.demandaCuarto(p, c)).some(v => v > 0));
+    if (!hay) { UI.alert('Ingrese primero las salidas por servicio (sección 4): el armado se calcula a partir de ellas.'); return; }
+    UI.modal('Armar racks automáticamente', h('div', { class: 'stack' },
+      h('p', null, 'Se calcularán, para cada cuarto con salidas: patch panels, switches (PoE donde haya servicios PoE), organizadores, bandejas de fibra según la fibra troncal, UPS, PDU, tierra y tapas ciegas en los RU libres.'),
+      h('p', null, 'Se reemplazarán las filas generadas antes por el armado automático ("auto"). Las filas que usted agregó o fijó a mano se conservan. Si un rack no alcanza, se agregan racks nuevos al cuarto.'),
+      h('p', { class: 'hint' }, 'Supuestos: patch panel de 48 o 24 puertos, un switch por panel, PoE estimado en ' + Armado.POE_W + ' W por dispositivo, UPS hasta 80 % de carga.')), [
+      { label: 'Cancelar' }, { label: 'Armar', cls: 'primary', onclick: () => {
+        let rep; try { rep = Armado.run(p, Store.catalog); } catch (e) { UI.alert('No se pudo armar: ' + e.message); return; }
+        done();
+        UI.modal('Resultado del armado', h('div', { class: 'stack' }, rep.map(r => h('div', null, h('b', null, 'Cuarto ' + r.cuarto + ': '),
+          r.paneles ? r.paneles + ' patch panel(es), ' + r.switches + ' switch(es), ' + r.puertos + ' puertos' : 'sin patch panels', r.fibras ? ' · ' + r.fibras + ' fibras troncales' : '', r.ups ? ' · ' + r.ups + ' UPS' : '', r.nuevosRacks ? ' · ' + r.nuevosRacks + ' rack(s) nuevo(s)' : '',
+          r.avisos.map(a => h('div', { class: 'status bad' }, '⚠ ' + a)))), h('p', { class: 'hint' }, 'Revise cada rack: puede cambiar cualquier equipo o fijarlo.')), [{ label: 'Entendido', cls: 'primary' }]);
+      } }]);
   }
 
   function cuartoDialog(done) {
