@@ -35,21 +35,22 @@
       UI.field('Jack por defecto', UI.select(UI.itemOptions(jacks, '— sin jack —'), p.jackId, v => { p.jackId = v; Store.save(); }), 'Se cuenta uno por cada salida etiquetada en la lista de materiales.'));
 
     /* ---------------- servicios y redes LAN ---------------- */
-    // Una sola pregunta al inicio: ¿todos los servicios comparten una misma red LAN?
-    const compartir = p.compartirRed !== false;
-    const preguntaRed = UI.select(SINO, compartir ? 'si' : 'no', v => {
-      if (v === 'si') { p.compartirRed = true; p.lans = [p.lans[0]]; for (const k in p.servicios) p.servicios[k].lan = 1; }
-      else { p.compartirRed = false; if (p.lans.length < 2) p.lans.push({ id: 2, nombre: 'LAN 2' }); }
-      Store.save(); render(root);
-    });
-    const lanCount = UI.select([2, 3, 4].map(n => ({ value: String(n), label: String(n) })), String(Math.max(2, p.lans.length)), v => {
+    // Cantidad de redes LAN disponibles (siempre) y, si hay más de una, una sola pregunta: ¿los servicios comparten red?
+    const multi = p.lans.length > 1, compartir = !multi || p.compartirRed !== false;
+    const lanCount = UI.select([1, 2, 3, 4].map(n => ({ value: String(n), label: String(n) })), String(p.lans.length), v => {
       const n = Number(v);
       while (p.lans.length < n) p.lans.push({ id: p.lans.length + 1, nombre: 'LAN ' + (p.lans.length + 1) });
       while (p.lans.length > n) p.lans.pop();
       for (const k in p.servicios) if (p.servicios[k].lan > n) p.servicios[k].lan = 1;
+      if (n === 1) p.compartirRed = true;
       Store.save(); render(root);
     });
-    const lanNames = compartir ? null : h('div', { class: 'grid cols-4' }, p.lans.map((l, i) => UI.field('Nombre de la red ' + (i + 1), UI.input(l, 'nombre', { after: () => render(root) }))));
+    const preguntaRed = UI.select(SINO, compartir ? 'si' : 'no', v => {
+      p.compartirRed = v === 'si';
+      if (p.compartirRed) for (const k in p.servicios) p.servicios[k].lan = 1;
+      Store.save(); render(root);
+    });
+    const lanNames = h('div', { class: 'grid cols-4' }, p.lans.map((l, i) => UI.field('Nombre de la red ' + (i + 1), UI.input(l, 'nombre', { after: () => render(root) }))));
     const sbody = h('tbody');
     tipos().forEach(t => {
       const s = p.servicios[t.codigo], isData = t.codigo === 'D';
@@ -60,11 +61,11 @@
       if (!compartir) cells.push(h('td', null, UI.select(p.lans.map(l => ({ value: String(l.id), label: l.nombre })), String(s.lan), v => { s.lan = Number(v); Store.save(); render(root); }, { disabled: isData || !s.activo, label: 'Red asignada' })));
       sbody.appendChild(h('tr', { class: s.activo ? '' : 'dim' }, cells));
     });
-    const lanResumen = compartir ? null : h('ul', { class: 'steps' }, p.lans.map(l => { const sv = activos().filter(t => p.servicios[t.codigo].lan === l.id).map(t => t.nombre); return h('li', null, h('b', null, l.nombre + ': '), sv.length ? sv.join(', ') : h('span', { class: 'status bad' }, 'sin servicios')); }));
+    const lanResumen = multi ? h('ul', { class: 'steps' }, p.lans.map(l => { const sv = activos().filter(t => p.servicios[t.codigo].lan === l.id).map(t => t.nombre); return h('li', null, h('b', null, l.nombre + ': '), sv.length ? sv.join(', ') : h('span', { class: compartir ? 'muted' : 'status bad' }, compartir ? 'disponible, sin servicios asignados' : 'sin servicios')); })) : null;
     const servicios = h('div', { class: 'stack' },
       h('div', { class: 'grid cols-4' },
-        UI.field('¿Todos los servicios comparten una misma red LAN?', preguntaRed, compartir ? 'Sí: una sola red para todos los servicios (switches y patch panels compartidos).' : 'No: cada red tendrá sus propios switches y patch panels; asigne cada servicio a una red.', 'span-2'),
-        compartir ? null : UI.field('Cantidad de redes LAN', lanCount)),
+        UI.field('Cantidad de redes LAN disponibles', lanCount, 'Cada red tiene sus propios switches y patch panels.'),
+        multi ? UI.field('¿Todos los servicios comparten una misma red LAN?', preguntaRed, compartir ? 'Sí: todos los servicios usan la LAN 1; las demás quedan disponibles.' : 'No: asigne cada servicio a una red en la tabla.', 'span-2') : null),
       lanNames,
       h('div', { class: 'table-wrap' }, h('table', { class: 'tbl' }, h('thead', null, h('tr', null, ['Activo', 'Código', 'Servicio', 'PoE'].concat(compartir ? [] : ['Red asignada']).map(t => h('th', null, t)))), sbody)),
       lanResumen);
