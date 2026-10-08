@@ -483,5 +483,115 @@
   "source": "https://avlgear.com/products/apc-smt3000rm2u-smart-ups-3000va-rm-2u-lcd-120v-with-smartconnect",
   "referencial": false,
   "file": "img/catalogo/apc-smt3000rm2u.jpg"
+ },
+ "it-093": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-tapa-ciega.jpg"
+ },
+ "it-095": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-fibra-bandeja.jpg"
+ },
+ "it-097": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-espacio-libre.jpg"
+ },
+ "it-098": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-espacio-reservado.jpg"
+ },
+ "it-099": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-espacio-reservado.jpg"
+ },
+ "it-100": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-espacio-reservado.jpg"
+ },
+ "it-101": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-servidor-1u.jpg"
+ },
+ "it-102": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-servidor-8u.jpg"
+ },
+ "it-103": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-dvd-1u.jpg"
+ },
+ "it-104": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-equipo-activo.jpg"
+ },
+ "it-106": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-barra-tierra.jpg"
+ },
+ "it-109": {
+  "source": "Presentación \"Tipos de Canastas\" (aportada por el usuario)",
+  "referencial": false,
+  "file": "img/catalogo/canasta-malla.jpg"
+ },
+ "it-110": {
+  "source": "Presentación \"Tipos de Canastas\" (aportada por el usuario)",
+  "referencial": false,
+  "file": "img/catalogo/canasta-malla.jpg"
+ },
+ "it-111": {
+  "source": "Presentación \"Tipos de Canastas\" (aportada por el usuario)",
+  "referencial": false,
+  "file": "img/catalogo/canasta-malla.jpg"
+ },
+ "it-112": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-tuberia-emt.jpg"
+ },
+ "it-113": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-tuberia-emt.jpg"
+ },
+ "it-114": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-tuberia-emt.jpg"
+ },
+ "it-115": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-tuberia-emt.jpg"
+ },
+ "it-116": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-cable-cat6a.jpg"
+ },
+ "it-117": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-cable-cat6.jpg"
+ },
+ "it-118": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-fibra-om4.jpg"
+ },
+ "it-119": {
+  "source": "Ilustración genérica creada para esta herramienta",
+  "referencial": true,
+  "file": "img/catalogo/gen-fibra-os2.jpg"
  }
 }

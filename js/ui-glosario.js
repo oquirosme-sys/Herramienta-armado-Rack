@@ -36,7 +36,7 @@
     }
     root.appendChild(h('div', { class: 'stack' },
       h('div', { class: 'room-head' }, h('div', null, h('h2', null, 'Glosario de equipos'), h('p', { class: 'muted' }, 'Qué es cada equipo del rack, para qué sirve y cómo se ve. Las imágenes y textos los mantiene el administrador.')), h('div', { class: 'toolbar no-print' }, search)),
-      host, h('p', { class: 'hint' }, 'Imágenes de producto: propiedad de sus fabricantes (Panduit, Cisco, Axis, APC, Crown, TOA, Bose y otros), usadas con fines didácticos. "Imagen referencial" = foto de otro modelo de la misma familia.')));
+      host, h('p', { class: 'hint' }, 'Imágenes de producto: propiedad de sus fabricantes (Panduit, Cisco, Axis, APC, Crown, TOA, Bose y otros), usadas con fines didácticos. "Imagen referencial" = foto de otro modelo de la misma familia o ilustración genérica.')));
     fill();
   }
 

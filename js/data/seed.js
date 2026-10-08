@@ -159,7 +159,9 @@ window.SEED = {
    "rol": "equipo",
    "color": "#808080",
    "descripcion": "Panel que cierra los RU vacíos para mantener separado el aire frío del caliente y dar buena presentación.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gen-tapa-ciega.jpg"
+   ]
   },
   {
    "nombre": "Bandeja",
@@ -175,35 +177,47 @@ window.SEED = {
    "rol": "libre",
    "color": "#FFFFFF",
    "descripcion": "RU sin equipo; no se compra ni cuenta como ocupado. Se recomienda cerrarlo con tapas ciegas.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gen-espacio-libre.jpg"
+   ]
   },
   {
    "nombre": "Espacio reservado",
    "rol": "reservado",
    "color": "#F8CBAD",
    "descripcion": "RU que se reserva para un equipo futuro (por ejemplo, un switch o la fibra del proveedor). Ocupa lugar en el rack pero no entra en la lista de materiales.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gen-espacio-reservado.jpg"
+   ]
   },
   {
    "nombre": "Servidor",
    "rol": "equipo",
    "color": "#FFC000",
    "descripcion": "Equipo de cómputo de otros sistemas. Se define con el proveedor del sistema.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gen-servidor-1u.jpg",
+    "img/catalogo/gen-servidor-8u.jpg"
+   ]
   },
   {
    "nombre": "Equipo activo",
    "rol": "equipo",
    "color": "#2F75B5",
    "descripcion": "Equipo de red o de otro sistema por definir con el proveedor.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gen-dvd-1u.jpg",
+    "img/catalogo/gen-equipo-activo.jpg"
+   ]
   },
   {
    "nombre": "Puesta a tierra",
    "rol": "equipo",
    "color": "#A6A6A6",
    "descripcion": "Barra de tierra del rack para conectar equipos y estructura al sistema de puesta a tierra de telecomunicaciones. En rack es horizontal; en gabinete puede ser vertical.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gen-barra-tierra.jpg"
+   ]
   },
   {
    "nombre": "Jack",
@@ -219,21 +233,29 @@ window.SEED = {
    "rol": "canalizacion",
    "color": "#9DC3E6",
    "descripcion": "Bandeja portacables: término general para las canalizaciones tipo bandeja o canasta. La canasta tipo malla se usa en telecomunicaciones para cobre (UTP) y cables ligeros; la tipo escalera, cuando la densidad de cableado y el peso son altos.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/canasta-malla.jpg",
+    "img/catalogo/canasta-escalera.jpg"
+   ]
   },
   {
    "nombre": "Tubería",
    "rol": "canalizacion",
    "color": "#F4B183",
    "descripcion": "Canalización cerrada (por ejemplo EMT) para tramos que requieren protección mecánica.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gen-tuberia-emt.jpg"
+   ]
   },
   {
    "nombre": "Cableado",
    "rol": "cableado",
    "color": "#A9D18E",
    "descripcion": "Cable de cobre (UTP) o fibra óptica que conecta las salidas con los patch panels y los cuartos entre sí.",
-   "imagenes": []
+   "imagenes": [
+    "img/catalogo/gen-cable-cat6a.jpg",
+    "img/catalogo/gen-cable-cat6.jpg"
+   ]
   }
  ],
  "items": [
@@ -1628,7 +1650,9 @@ window.SEED = {
    "notas": "Tool-less blanking panel",
    "consumo": 0,
    "peso": 0,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-tapa-ciega.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-094",
@@ -1656,7 +1680,9 @@ window.SEED = {
    "notas": "Opticom fiber drawer 1RU + FAP 12 LC dúplex OM3/OM4 aqua",
    "consumo": 0,
    "peso": 3,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-fibra-bandeja.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-096",
@@ -1684,7 +1710,9 @@ window.SEED = {
    "notas": "No se compra",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-espacio-libre.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-098",
@@ -1697,7 +1725,9 @@ window.SEED = {
    "notas": "Reserva; no entra en la lista de materiales",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-espacio-reservado.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-099",
@@ -1710,7 +1740,9 @@ window.SEED = {
    "notas": "Reserva; no entra en la lista de materiales",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-espacio-reservado.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-100",
@@ -1723,7 +1755,9 @@ window.SEED = {
    "notas": "Reserva para el proveedor de servicio",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-espacio-reservado.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-101",
@@ -1736,7 +1770,9 @@ window.SEED = {
    "notas": "",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-servidor-1u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-102",
@@ -1749,7 +1785,9 @@ window.SEED = {
    "notas": "",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-servidor-8u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-103",
@@ -1762,7 +1800,9 @@ window.SEED = {
    "notas": "",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-dvd-1u.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-104",
@@ -1775,7 +1815,9 @@ window.SEED = {
    "notas": "",
    "consumo": null,
    "peso": null,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-equipo-activo.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-105",
@@ -1803,7 +1845,9 @@ window.SEED = {
    "notas": "StructuredGround busbar kit, 14 perforaciones",
    "consumo": 0,
    "peso": 1,
-   "capacidad": null
+   "capacidad": null,
+   "imagen": "img/catalogo/gen-barra-tierra.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-107",
@@ -1848,7 +1892,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 3
+   "largoPieza": 3,
+   "imagen": "img/catalogo/canasta-malla.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-110",
@@ -1863,7 +1909,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 3
+   "largoPieza": 3,
+   "imagen": "img/catalogo/canasta-malla.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-111",
@@ -1878,7 +1926,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 3
+   "largoPieza": 3,
+   "imagen": "img/catalogo/canasta-malla.jpg",
+   "imagenRef": false
   },
   {
    "id": "it-112",
@@ -1893,7 +1943,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 3.05
+   "largoPieza": 3.05,
+   "imagen": "img/catalogo/gen-tuberia-emt.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-113",
@@ -1908,7 +1960,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 3.05
+   "largoPieza": 3.05,
+   "imagen": "img/catalogo/gen-tuberia-emt.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-114",
@@ -1923,7 +1977,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 3.05
+   "largoPieza": 3.05,
+   "imagen": "img/catalogo/gen-tuberia-emt.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-115",
@@ -1938,7 +1994,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 3.05
+   "largoPieza": 3.05,
+   "imagen": "img/catalogo/gen-tuberia-emt.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-116",
@@ -1953,7 +2011,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 305
+   "largoPieza": 305,
+   "imagen": "img/catalogo/gen-cable-cat6a.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-117",
@@ -1968,7 +2028,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": 305
+   "largoPieza": 305,
+   "imagen": "img/catalogo/gen-cable-cat6.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-118",
@@ -1983,7 +2045,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": null
+   "largoPieza": null,
+   "imagen": "img/catalogo/gen-fibra-om4.jpg",
+   "imagenRef": true
   },
   {
    "id": "it-119",
@@ -1998,7 +2062,9 @@ window.SEED = {
    "peso": null,
    "capacidad": null,
    "unidad": "m",
-   "largoPieza": null
+   "largoPieza": null,
+   "imagen": "img/catalogo/gen-fibra-os2.jpg",
+   "imagenRef": true
   }
  ],
  "marcas": [
