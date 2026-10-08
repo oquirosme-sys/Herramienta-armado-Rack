@@ -25,7 +25,7 @@
       kW.v.textContent = U.fmt(c.power.consumo) + ' W';
     });
     const head = h('div', { class: 'room-head' },
-      h('div', null, h('h2', null, 'Nivel ', h('span', { class: 'code' }, room.codigo)), h('p', { class: 'muted' }, room.descripcion || 'Sin descripción')),
+      h('div', null, h('h2', null, 'Rack ', h('span', { class: 'code' }, room.codigo), h('small', { class: 'muted' }, '  ·  cuarto ' + ((Store.cuarto(room.cuartoId) || {}).codigo || '—'))), h('p', { class: 'muted' }, room.descripcion || 'Sin descripción')),
       h('div', { class: 'kpis' }, kRU.el, kPct.el, kPP.el, kOut.el, kPPpct.el, kW.el),
       h('p', { class: 'print-meta' }, [Store.project.nombre, Store.project.numero && 'Proyecto N.º ' + Store.project.numero, Store.project.ubicacion, Store.project.revision && 'Rev. ' + Store.project.revision, Store.project.fecha, Store.project.elaboro && 'Elaboró: ' + Store.project.elaboro].filter(Boolean).join('  ·  ')),
       h('div', { class: 'no-print toolbar-inline' }, UI.btn('Imprimir hoja', () => window.print(), 'small'), UI.btn('Nivel a Word', () => ExportDoc.download(room.id), 'small primary'), UI.btn('Nivel a Excel', () => ExportXlsx.download(room.id), 'small primary')));
@@ -60,11 +60,12 @@
     const rackInfo = h('small', { class: 'hint' });
     B.pane.push(c => { rackInfo.textContent = c.rack ? c.rack.marca + ' ' + c.rack.parte + ' · ' + c.totalRU + ' RU' + (c.rack.notas ? ' · ' + c.rack.notas : '') : 'Seleccione un rack o gabinete.'; });
     const datos = h('div', { class: 'grid cols-4' },
-      UI.field('Código del cuarto', UI.input(room, 'codigo', {
-        validate: v => { if (!v) { UI.toast('El código no puede quedar vacío.', 'warn'); return false; } if (p.niveles.some(o => o !== room && o.codigo === v)) { UI.toast('Ya existe un nivel con ese código.', 'warn'); return false; } return true; },
+      UI.field('Código del rack', UI.input(room, 'codigo', {
+        validate: v => { if (!v) { UI.toast('El código no puede quedar vacío.', 'warn'); return false; } if (p.niveles.some(o => o !== room && o.codigo === v)) { UI.toast('Ya existe un rack con ese código.', 'warn'); return false; } return true; },
         after: () => { App.refreshTabs(); refresh(); },
-      }), 'Prefijo de las etiquetas.'),
-      UI.field('Descripción', UI.input(room, 'descripcion', { after: () => App.refreshTabs() }), null, 'span-3'),
+      }), 'Nombre de la pestaña.'),
+      UI.field('Descripción', UI.input(room, 'descripcion', { after: () => App.refreshTabs() }), null, 'span-2'),
+      UI.field('Cuarto', UI.select(p.cuartos.map(q => ({ value: q.id, label: q.codigo + (q.tipo === 'principal' ? ' (principal)' : '') })), room.cuartoId, v => { room.cuartoId = v; Store.save(); refresh(); }), 'Las etiquetas usan el código del cuarto.'),
       UI.field('Rack / gabinete', UI.select(UI.itemOptions(rackItems, '— seleccione —'), room.rackId, v => { room.rackId = v; Store.save(); refresh(); }), null, 'span-2'),
       UI.field('Cantidad', UI.input(room, 'rackQty', { type: 'number', min: 1, step: 1, after: refresh })),
       h('div', { class: 'field' }, h('span', { class: 'field-l' }, 'Capacidad'), rackInfo),
@@ -251,7 +252,7 @@
       UI.btn('Exportar etiquetas (CSV)', () => {
         const c = Calc.calcRoom(room, cat, Store.project);
         const rows = [['Cuarto', 'Panel', 'Puerto', 'Etiqueta', 'Tipo', 'Salida']];
-        c.panels.forEach(P => P.ports.forEach(o => { if (o.tipo) rows.push([room.codigo, P.code, U.pad(o.n, 2), o.label, o.tipo, o.salida]); }));
+        c.panels.forEach(P => P.ports.forEach(o => { if (o.tipo) rows.push([(Store.cuarto(room.cuartoId) || room).codigo, P.code, U.pad(o.n, 2), o.label, o.tipo, o.salida]); }));
         U.download('etiquetas-' + room.codigo + '.csv', U.csv(rows), 'text/csv;charset=utf-8');
       }),
       UI.btn('Quitar todos los ajustes por puerto', async () => { if (await UI.confirm('¿Quitar los ajustes manuales de este cuarto y volver al tipo del panel?', 'Quitar', true)) { room.portTipos = {}; Store.save(); showAgain(); } }, 'ghost')));

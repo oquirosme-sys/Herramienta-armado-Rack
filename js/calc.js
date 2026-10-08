@@ -19,13 +19,16 @@
   const panelLetters = n => String.fromCharCode(65 + Math.floor((n - 1) / 26)) + String.fromCharCode(65 + ((n - 1) % 26));
   const orgQty = u => (u === 'Ambos lados' ? 2 : (u === 'Lado izquierdo' || u === 'Lado derecho') ? 1 : 0);
 
-  function calcRoom(room, cat, project, ix) {
+  /** Un rack o gabinete. `st` lleva la numeración de paneles y salidas compartida por todos los racks de un mismo cuarto. */
+  function calcRack(room, cat, project, ix, st) {
     ix = ix || index(cat);
+    const cuarto = (project.cuartos || []).find(c => c.id === room.cuartoId);
+    const prefix = cuarto ? cuarto.codigo : room.codigo;
     const rack = ix.byId[room.rackId];
     const rackQty = Math.max(1, Number(room.rackQty) || 1);
     const totalRU = rack && rack.ru > 0 ? rack.ru : 45;
-    const rows = [], panels = [], counters = {}, outletsByType = {};
-    let cum = 0, libreRU = 0, panelN = 0, outlets = 0, ports = 0;
+    const rows = [], panels = [], counters = st.counters, outletsByType = {};
+    let cum = 0, libreRU = 0, outlets = 0, ports = 0;
     let consumo = 0, peso = 0, capSum = 0, capMax = 0, upsN = 0, sinDato = 0;
     const bom = {}; const add = (id, q) => { if (q) bom[id] = (bom[id] || 0) + q; };
 
@@ -49,7 +52,7 @@
       if (row.role === 'ups') upsN++;
 
       if (row.role === 'panel') {
-        panelN++;
+        st.panelN++;
         const np = item.puertos || 0;
         // Tramos de tipos de salida consecutivos: el principal (tipo/salidas) y los adicionales (eq.mas)
         const mas = (eq.mas || []).filter(m => m.tipo && Number(m.cant) > 0);
@@ -59,7 +62,7 @@
         const segs = [{ tipo: eq.tipo || '', cant: first }].concat(mas.map(m => ({ tipo: m.tipo, cant: Number(m.cant) })));
         const byPort = []; segs.forEach(sg => { for (let k = 0; k < sg.cant && byPort.length < np; k++) byPort.push(sg.tipo); });
         const used = byPort.length;
-        const code = room.codigo + '-' + panelLetters(panelN);
+        const code = prefix + '-' + panelLetters(st.panelN);
         const tiposTxt = [...new Set(segs.filter(sg => sg.tipo && sg.cant > 0).map(sg => sg.tipo))].join('/');
         const P = { row, eq, code, np, used, tipo: tiposTxt, ports: [], labeled: 0, blocks: Math.ceil(np / 24) };
         for (let p = 1; p <= np; p++) {
@@ -117,7 +120,7 @@
     });
 
     return {
-      room, rack, rackQty, totalRU, rows, panels, elevation, outlets, ports, outletsByType, bom,
+      room, cuarto, prefix, rack, rackQty, totalRU, rows, panels, elevation, outlets, ports, outletsByType, bom,
       ocupados, libres: totalRU - ocupados, usoRU: cum, excede: cum > totalRU,
       pctRack: totalRU ? ocupados / totalRU : 0,
       pctPanel: ports ? outlets / ports : null,
@@ -131,9 +134,58 @@
     };
   }
 
+  const newSt = () => ({ panelN: 0, counters: {} });
+  /** Calcula un rack respetando la numeración de los demás racks de su cuarto. */
+  function calcRoom(room, cat, project, ix) {
+    ix = ix || index(cat);
+    const st = newSt();
+    const sib = room.cuartoId ? (project.niveles || []).filter(r => r.cuartoId === room.cuartoId) : [];
+    if (sib.includes(room)) { for (const r of sib) { const c = calcRack(r, cat, project, ix, st); if (r === room) return c; } }
+    return calcRack(room, cat, project, ix, st);
+  }
+
+  /** Salidas requeridas por cuarto y servicio (por cuarto, o sumando los niveles del edificio que atiende). */
+  function demandaCuarto(project, cuarto) {
+    const out = {};
+    if (project.modoSalidas === 'nivel') {
+      (project.nivelesEdificio || []).filter(n => n.cuartoId === cuarto.id).forEach(n => { for (const k in (n.salidas || {})) out[k] = (out[k] || 0) + (Number(n.salidas[k]) || 0); });
+    } else for (const k in (cuarto.salidas || {})) out[k] = Number(cuarto.salidas[k]) || 0;
+    return out;
+  }
+  const serviciosActivos = (project, cat) => (cat.tiposSalida || []).filter(t => t.codigo !== '-' && (project.servicios || {})[t.codigo] && project.servicios[t.codigo].activo);
+
+  /** Demanda vs. oferta por cuarto y servicio (la oferta son los puertos etiquetados en los racks del cuarto). */
+  function planning(project, cat, P) {
+    const res = (Number(project.reservaPct) || 0) / 100;
+    const act = serviciosActivos(project, cat);
+    return (project.cuartos || []).map(c => {
+      const dem = demandaCuarto(project, c), racks = P.rooms.filter(r => r.room.cuartoId === c.id);
+      const rows = act.map(t => {
+        const req = dem[t.codigo] || 0, reqRes = Math.ceil(req * (1 + res) - 1e-9);
+        const prov = racks.reduce((a, r) => a + (r.outletsByType[t.codigo] || 0), 0);
+        return { tipo: t, req, reqRes, prov, falta: Math.max(0, reqRes - prov) };
+      }).filter(r => r.req || r.prov);
+      return { cuarto: c, racks, rows, faltan: rows.reduce((a, r) => a + r.falta, 0) };
+    });
+  }
+
+  /** Estimado de fibra troncal entre el cuarto principal y cada secundario (validar por el ingeniero). */
+  function fibra(project, cat) {
+    const cu = project.cuartos || [], pr = cu.find(c => c.tipo === 'principal');
+    const lans = new Set(serviciosActivos(project, cat).map(t => project.servicios[t.codigo].lan || 1));
+    const nLan = Math.max(1, lans.size), f = project.fibra || {};
+    const enlaces = nLan * (f.redundante ? 2 : 1), base = enlaces * 2;
+    let total = Math.ceil(base * (1 + (Number(f.reserva) || 0) / 100) - 1e-9); if (total % 2) total++;
+    return cu.filter(c => c.tipo !== 'principal').map(c => {
+      const d = Number(c.distancia) || 0;
+      return { cuarto: c, principal: pr, distancia: d, enlaces, base, total, tipo: d ? (d > 300 ? 'OS2 monomodo' : 'OM4 multimodo') : '', falta: !d };
+    });
+  }
+
   function calcProject(project, cat) {
     const ix = index(cat);
-    const rooms = (project.niveles || []).map(r => calcRoom(r, cat, project, ix));
+    const sts = {};
+    const rooms = (project.niveles || []).map(r => { const k = r.cuartoId || ('r' + r.id); return calcRack(r, cat, project, ix, sts[k] || (sts[k] = newSt())); });
     const out = { ix, rooms, outlets: {}, bom: {}, canal: {}, cable: {}, tot: { ocupados: 0, totalRU: 0, panels: 0, ports: 0, outlets: 0, consumo: 0, calor: 0, peso: 0 } };
     rooms.forEach(c => {
       const id = c.room.id;
@@ -164,5 +216,5 @@
     return out;
   }
 
-  g.Calc = { index, calcRoom, calcProject, panelLetters, orgQty, portBlocks };
+  g.Calc = { index, calcRoom, calcProject, panelLetters, orgQty, portBlocks, demandaCuarto, serviciosActivos, planning, fibra };
 })(typeof window !== 'undefined' ? window : globalThis);

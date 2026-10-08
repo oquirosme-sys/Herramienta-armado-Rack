@@ -1758,6 +1758,14 @@ window.SEED = {
    "nombre": "Audio / video IP"
   },
   {
+   "codigo": "G",
+   "nombre": "Gateways"
+  },
+  {
+   "codigo": "R",
+   "nombre": "GRMS"
+  },
+  {
    "codigo": "-",
    "nombre": "Puerto sin salida (anula el tipo del panel)"
   }
@@ -1809,6 +1817,11 @@ window.SEED = {
    "n": 5,
    "fecha": "2026-10-06",
    "desc": "Web 0.1: herramienta HTML (GitHub Pages) con niveles/cuartos por pestaña, memoria de cálculo, tramos de canalización y modo administrador. Base de datos Supabase: pendiente (paso 2)."
+  },
+  {
+   "n": 6,
+   "fecha": "2026-10-07",
+   "desc": "Web 0.2: servicios y redes LAN, salidas por cuarto o por nivel del edificio, cuartos principal/secundarios con racks asignados, reserva de puertos y estimado de fibra troncal."
   }
  ],
  "plantillas": {
@@ -2196,5 +2209,6 @@ window.SEED = {
    "Sin organizador"
   ]
  },
- "jackDefectoId": "it-107"
+ "jackDefectoId": "it-107",
+ "catalogoVersion": 2
 };

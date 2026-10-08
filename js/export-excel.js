@@ -103,6 +103,16 @@
       const tipos = catalog.tiposSalida.filter(t => t.codigo !== '-');
       tipos.forEach((t, i) => { const q = r + 1 + i; s.set(q, 0, t.codigo, { b: 1, al: 'center' }); s.set(q, 1, t.nombre, {}); P.rooms.forEach((c, k) => s.set(q, 2 + k, c.outletsByType[t.codigo] || '', C)); s.set(q, 2 + P.rooms.length, P.outlets[t.codigo] || '', { al: 'center', b: 1 }); });
       const q = r + 1 + tipos.length; s.set(q, 0, 'TOTAL', { b: 1, bg: '#EDEDED' }); s.set(q, 1, '', { bg: '#EDEDED' }); P.rooms.forEach((c, k) => s.set(q, 2 + k, c.outlets, { al: 'center', b: 1, bg: '#EDEDED' })); s.set(q, 2 + P.rooms.length, P.tot.outlets, { al: 'center', b: 1, bg: '#EDEDED' });
+      { // servicios, cobertura y fibra
+        const act = Calc.serviciosActivos(project, catalog), plan = Calc.planning(project, catalog, P), fib = Calc.fibra(project, catalog);
+        let z = q + 3; s.set(z - 1, 0, 'Servicios y redes LAN', { b: 1, sz: 11, border: false });
+        hdr(s, z, 0, ['Red LAN', 'Servicios que la usan', 'Con PoE']);
+        project.lans.forEach((l, i) => { const sv = act.filter(t => project.servicios[t.codigo].lan === l.id); s.set(z + 1 + i, 0, l.nombre, { b: 1 }); s.set(z + 1 + i, 1, sv.map(t => t.codigo + ' ' + t.nombre).join(', '), {}); s.set(z + 1 + i, 2, sv.filter(t => project.servicios[t.codigo].poe).map(t => t.codigo).join(', '), {}); });
+        z += project.lans.length + 3; s.set(z - 1, 0, 'Cobertura de salidas por cuarto (reserva ' + project.reservaPct + ' %)', { b: 1, sz: 11, border: false });
+        hdr(s, z, 0, ['Cuarto', 'Servicio', 'Salidas requeridas', 'Con reserva', 'Puertos en racks', 'Estado']); let k = 0;
+        plan.forEach(pl => pl.rows.forEach(r => { k++; [pl.cuarto.codigo, r.tipo.codigo + ' — ' + r.tipo.nombre, r.req, r.reqRes, r.prov, r.falta ? 'Faltan ' + r.falta + ' puertos' : 'Cubierto'].forEach((v, j) => s.set(z + k, j, v, j > 1 && j < 5 ? C : {})); }));
+        z += k + 3; if (fib.length) { s.set(z - 1, 0, 'Fibra troncal entre cuartos (estimado: validar por el ingeniero)', { b: 1, sz: 11, border: false }); hdr(s, z, 0, ['Cuarto secundario', 'Distancia (m)', 'Enlaces', 'Fibras base', 'Fibras con reserva', 'Tipo sugerido']); fib.forEach((f, i) => [f.cuarto.codigo, f.distancia || '', f.enlaces, f.base, f.total, f.tipo || 'Falta la distancia'].forEach((v, j) => s.set(z + 1 + i, j, v, j > 0 && j < 5 ? C : {}))); }
+      }
       [10, 38, 30, 12, 10, 12, 12, 10, 10, 12].forEach((w, i) => s.width(i, w)); for (let k = 0; k < P.rooms.length; k++) s.width(2 + k, Math.max(s.__w || 0, 12));
     }
 
@@ -112,7 +122,7 @@
       const room = c.room, org = ix.byId[room.orgVertId], u = room.orgVertUbic;
       const left = org && (u === 'Ambos lados' || u === 'Lado izquierdo'), right = org && (u === 'Ambos lados' || u === 'Lado derecho');
       const s = mk('Rack ' + room.codigo);
-      s.set(0, 0, 'Nivel ' + room.codigo + (room.descripcion ? ' — ' + room.descripcion : ''), T);
+      s.set(0, 0, 'Rack ' + room.codigo + (room.descripcion ? ' — ' + room.descripcion : ''), T);
       s.set(1, 0, (c.rack ? c.rack.descripcion + (c.rackQty > 1 ? ' × ' + c.rackQty : '') : 'Sin rack') + ' · ' + c.ocupados + ' de ' + c.totalRU + ' RU ocupados (' + Math.round(c.pctRack * 100) + ' %) · ' + c.panels.length + ' patch panel(es) · ' + c.ports + ' puertos · ' + c.outlets + ' salidas', { border: false });
       hdr(s, 3, 0, ['RU', 'Org. V.', 'Equipo (alzado)', 'Org. V.', 'RU']);
       const orgTxt = org ? 'ORGANIZADOR VERTICAL ' + org.parte : '';
@@ -139,7 +149,7 @@
       // etiquetado: bloques de 24 puertos, 4 por fila (formato de la hoja del Excel original)
       if (c.panels.length) {
         const e = mk('Etiq ' + room.codigo), GREEN = { b: 1, bg: '#00B050', color: '#FFFFFF', al: 'center' }, bl = Calc.portBlocks(c), NB = 4, CW = 6;
-        e.set(0, 0, 'ETIQUETADO DE PUERTOS — nivel ' + room.codigo + '   (patch panels de cobre, en el orden del rack)', { b: 1, bg: '#00B050', color: '#FFFFFF', border: false, sz: 11 });
+        e.set(0, 0, 'ETIQUETADO DE PUERTOS — rack ' + room.codigo + ' (cuarto ' + c.prefix + ')' + '   (patch panels de cobre, en el orden del rack)', { b: 1, bg: '#00B050', color: '#FFFFFF', border: false, sz: 11 });
         for (let k = 1; k < NB * CW - 1; k++) e.set(0, k, '', { bg: '#00B050', border: false });
         e.merge(0, 0, 0, NB * CW - 2);
         e.set(1, 0, 'El tipo de salida viene del panel (lista de equipos). Etiqueta = Cuarto-Panel-Puerto. La etiqueta en la salida del puesto de trabajo es la misma que en el puerto del rack.', { border: false, sz: 8 });
@@ -154,7 +164,7 @@
           }
         }
         for (let k = 0; k < NB; k++) { [7, 10, 10, 8, 14].forEach((w, j) => e.width(k * CW + j, w)); e.width(k * CW + 5, 3); }
-        c.panels.forEach(Pn => Pn.ports.forEach(o => todas.push([room.codigo, Pn.code, U.pad(o.n, 2), o.label, o.tipo, o.salida])));
+        c.panels.forEach(Pn => Pn.ports.forEach(o => todas.push([c.prefix, Pn.code, U.pad(o.n, 2), o.label, o.tipo, o.salida])));
       }
     });
 

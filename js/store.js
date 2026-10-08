@@ -32,17 +32,44 @@
       return { categorias: s.categorias, items: s.items, marcas: s.marcas, tiposSalida: s.tiposSalida, referencias: s.referencias, revisiones: s.revisiones, listas: s.listas, jackDefectoId: s.jackDefectoId };
     },
     emptyProject() {
-      return {
+      return Store.defaults({
         id: U.uid(), nombre: '', numero: '', ubicacion: '', fecha: U.today(), elaboro: '', revision: '',
-        jackId: Store.catalog.jackDefectoId || '', reservaCable: 10, niveles: [],
-      };
+        jackId: Store.catalog.jackDefectoId || '', niveles: [],
+      });
+    },
+    /** Completa los campos nuevos (servicios, redes, cuartos…) en proyectos nuevos o antiguos. */
+    defaults(p) {
+      const POE = ['C', 'W', 'A', 'B', 'G', 'R'], ACT = ['D', 'V', 'C', 'B', 'W', 'A'];
+      if (p.reservaPct === undefined) p.reservaPct = 30;
+      if (!p.modoSalidas) p.modoSalidas = 'cuarto';
+      if (!p.lans || !p.lans.length) p.lans = [{ id: 1, nombre: 'LAN 1 — Datos' }];
+      if (!p.cuartos) p.cuartos = [];
+      if (!p.nivelesEdificio) p.nivelesEdificio = [];
+      if (!p.fibra) p.fibra = { redundante: false, reserva: 20 };
+      p.servicios = p.servicios || {};
+      (Store.catalog.tiposSalida || []).forEach(t => {
+        if (t.codigo === '-') return;
+        if (!p.servicios[t.codigo]) p.servicios[t.codigo] = { activo: ACT.includes(t.codigo), poe: POE.includes(t.codigo), lan: 1 };
+      });
+      return p;
     },
     migrate() {
-      const p = Store.project;
+      const cat = Store.catalog, p = Store.project;
+      // el catálogo guardado en el navegador puede ser anterior: agregar tipos de salida nuevos (G, R…)
+      window.SEED.tiposSalida.forEach(t => {
+        if (!cat.tiposSalida.some(x => x.codigo === t.codigo)) { const i = cat.tiposSalida.findIndex(x => x.codigo === '-'); cat.tiposSalida.splice(i < 0 ? cat.tiposSalida.length : i, 0, U.clone(t)); }
+      });
+      Store.defaults(p);
       p.niveles.forEach(n => {
         n.equipos = n.equipos || []; n.fuera = n.fuera || []; n.tramos = n.tramos || []; n.portTipos = n.portTipos || {};
         n.equipos.forEach(e => { if (!e.id) e.id = U.uid(); });
       });
+      // proyectos anteriores: cada rack pasa a tener su propio cuarto (el primero es el principal)
+      if (!p.cuartos.length && p.niveles.length) {
+        p.niveles.forEach((n, i) => { const c = { id: U.uid(), codigo: n.codigo, nombre: n.descripcion || '', tipo: i === 0 ? 'principal' : 'secundario', distancia: null, salidas: {} }; p.cuartos.push(c); n.cuartoId = c.id; });
+      }
+      p.niveles.forEach(n => { if (!n.cuartoId || !p.cuartos.some(c => c.id === n.cuartoId)) n.cuartoId = p.cuartos.length ? p.cuartos[0].id : ''; });
+      if (p.cuartos.length && !p.cuartos.some(c => c.tipo === 'principal')) p.cuartos[0].tipo = 'principal';
     },
 
     /* ---------- guardado ---------- */
@@ -73,7 +100,35 @@
       Store.project = p; Store.migrate(); Store.flush();
     },
 
-    /* ---------- niveles ---------- */
+    /* ---------- cuartos de telecomunicaciones ---------- */
+    cuarto(id) { return Store.project.cuartos.find(c => c.id === id); },
+    nextCuartoCode() {
+      const used = new Set(Store.project.cuartos.map(n => n.codigo));
+      for (let i = 1; i < 100; i++) { const c = i + 'A'; if (!used.has(c)) return c; }
+      return U.uid();
+    },
+    nextRackCode(cuartoId) {
+      const c = Store.cuarto(cuartoId), n = Store.project.niveles.filter(r => r.cuartoId === cuartoId).length;
+      const used = new Set(Store.project.niveles.map(r => r.codigo)); let k = n + 1, code;
+      do { code = (c ? c.codigo : 'TR') + '-R' + k++; } while (used.has(code));
+      return code;
+    },
+    addCuarto(codigo, nombre, tipo) {
+      const c = { id: U.uid(), codigo, nombre: nombre || '', tipo: tipo || 'secundario', distancia: null, salidas: {} };
+      if (!Store.project.cuartos.length) c.tipo = 'principal';
+      if (c.tipo === 'principal') Store.project.cuartos.forEach(o => { o.tipo = 'secundario'; });
+      Store.project.cuartos.push(c); Store.save(); return c;
+    },
+    setPrincipal(id) { Store.project.cuartos.forEach(c => { c.tipo = c.id === id ? 'principal' : 'secundario'; }); Store.save(); },
+    removeCuarto(id) {
+      const p = Store.project; if (p.niveles.some(r => r.cuartoId === id)) return false;
+      const era = (Store.cuarto(id) || {}).tipo; p.cuartos = p.cuartos.filter(c => c.id !== id);
+      if (era === 'principal' && p.cuartos.length) p.cuartos[0].tipo = 'principal';
+      p.nivelesEdificio.forEach(n => { if (n.cuartoId === id) n.cuartoId = ''; }); Store.save(); return true;
+    },
+    addNivelEdificio(nombre) { const n = { id: U.uid(), nombre, cuartoId: (Store.project.cuartos[0] || {}).id || '', salidas: {} }; Store.project.nivelesEdificio.push(n); Store.save(); return n; },
+
+    /* ---------- niveles (racks y gabinetes) ---------- */
     findRoom(id) { return Store.project.niveles.find(n => n.id === id); },
     firstRackOf(montaje) {
       const cats = { piso: ['Rack'], gabinete: ['Gabinete'], pared: ['Gabinete de pared', 'Rack de pared'] }[montaje] || ['Rack'];
@@ -86,11 +141,11 @@
       return U.uid();
     },
     /** Crea un nivel/cuarto. plantilla: 'piso' | 'gabinete' | 'pared' | 'vacio:<montaje>' */
-    addRoom(codigo, descripcion, plantilla) {
+    addRoom(codigo, descripcion, plantilla, cuartoId) {
       const vacio = String(plantilla).startsWith('vacio:');
       const t = vacio ? null : window.SEED.plantillas[plantilla];
       const room = {
-        id: U.uid(), codigo, descripcion: descripcion || '', montaje: t ? t.montaje : (vacio ? plantilla.slice(6) : 'piso'),
+        id: U.uid(), codigo, cuartoId: cuartoId || ((Store.project.cuartos || [])[0] || {}).id || '', descripcion: descripcion || '', montaje: t ? t.montaje : (vacio ? plantilla.slice(6) : 'piso'),
         rackId: '', rackQty: 1, orgVertId: '', orgVertUbic: 'Ambos lados', equipos: [], fuera: [], poeW: null, portTipos: {}, tramos: [],
       };
       if (t) {
@@ -109,6 +164,7 @@
       return room;
     },
     duplicateRoom(id, codigo) {
+      /* copia el rack en el mismo cuarto */
       const src = Store.findRoom(id); if (!src) return null;
       const c = U.clone(src); c.id = U.uid(); c.codigo = codigo; c.descripcion = src.descripcion + ' (copia)';
       const map = {}; c.equipos.forEach(e => { const n = U.uid(); map[e.id] = n; e.id = n; });

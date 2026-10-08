@@ -78,7 +78,7 @@
   function roomSection(C, ix, project) {
     const room = C.room;
     const s = [];
-    s.push('<h1 style="font:bold 16pt Arial;margin:0 0 4pt;page-break-before:always">Nivel ' + esc(room.codigo) + (room.descripcion ? ' — ' + esc(room.descripcion) : '') + '</h1>');
+    s.push('<h1 style="font:bold 16pt Arial;margin:0 0 4pt;page-break-before:always">Rack ' + esc(room.codigo) + ' · cuarto ' + esc(C.prefix) + (room.descripcion ? ' — ' + esc(room.descripcion) : '') + '</h1>');
     s.push(p((C.rack ? C.rack.descripcion + (C.rackQty > 1 ? ' × ' + C.rackQty : '') : 'Sin rack') + ' · ' + C.ocupados + ' de ' + C.totalRU + ' RU ocupados (' + Math.round(C.pctRack * 100) + ' %) · ' + C.panels.length + ' patch panel(es), ' + C.ports + ' puertos, ' + C.outlets + ' salidas etiquetadas'));
     s.push(h3('Alzado del rack'));
     s.push(elevationTable(C, ix));
@@ -87,7 +87,7 @@
     s.push(fueraTable(room, ix));
     if (C.panels.length) {
       s.push('<br style="page-break-before:always" clear="all">');
-      s.push(h2('Etiquetado de puertos — nivel ' + room.codigo));
+      s.push(h2('Etiquetado de puertos — rack ' + room.codigo + ' (cuarto ' + C.prefix + ')'));
       s.push(p('El tipo de salida viene del panel (lista de equipos). Etiqueta = Cuarto-Panel-Puerto. La etiqueta en la salida del puesto de trabajo es la misma que en el puerto del rack.'));
       s.push(labelBands(C));
     }
@@ -113,6 +113,18 @@
       b.push(h2('Salidas por tipo'));
       b.push(table([tr([th('Código'), th('Tipo de salida')].concat(R.map(c => th(c.room.codigo)), [th('Total')]))].concat(tipos.map(t => tr([td('<b>' + esc(t.codigo) + '</b>', { raw: true, al: 'center' }), td(t.nombre)].concat(R.map(c => td(c.outletsByType[t.codigo] || '', { al: 'center' })), [td(P.outlets[t.codigo] || '', { al: 'center' })]))),
         [tr([td('<b>TOTAL</b>', { raw: true, cs: 2 })].concat(R.map(c => td('<b>' + c.outlets + '</b>', { raw: true, al: 'center' })), [td('<b>' + P.tot.outlets + '</b>', { raw: true, al: 'center' })]))])));
+    }
+    if (!onlyRoomId) {
+      const act = Calc.serviciosActivos(project, catalog), plan = Calc.planning(project, catalog, P), fib = Calc.fibra(project, catalog);
+      b.push(h2('Servicios y redes LAN'));
+      b.push(table([tr(['Red LAN', 'Servicios que la usan', 'Con PoE'].map(t => th(t)))].concat(project.lans.map(l => { const sv = act.filter(t => project.servicios[t.codigo].lan === l.id); return tr([td('<b>' + esc(l.nombre) + '</b>', { raw: true }), td(sv.map(t => t.codigo + ' ' + t.nombre).join(', ')), td(sv.filter(t => project.servicios[t.codigo].poe).map(t => t.codigo).join(', '))]); }))));
+      b.push(p('Reserva de puertos: ' + project.reservaPct + ' %. Salidas ingresadas por ' + (project.modoSalidas === 'nivel' ? 'nivel del edificio' : 'cuarto') + '.'));
+      const cov = []; plan.forEach(q => q.rows.forEach(r => cov.push(tr([td('<b>' + esc(q.cuarto.codigo) + '</b>', { raw: true }), td(r.tipo.codigo + ' — ' + r.tipo.nombre), td(r.req, { al: 'center' }), td(r.reqRes, { al: 'center' }), td(r.prov, { al: 'center' }), td(r.falta ? 'Faltan ' + r.falta + ' puertos' : 'Cubierto')]))));
+      if (cov.length) { b.push(h2('Cobertura de salidas por cuarto')); b.push(table([tr(['Cuarto', 'Servicio', 'Salidas requeridas', 'Con reserva ' + project.reservaPct + ' %', 'Puertos en racks', 'Estado'].map(t => th(t)))].concat(cov))); }
+      if (fib.length) {
+        b.push(h2('Fibra troncal entre cuartos (estimado — validar por el ingeniero)'));
+        b.push(table([tr(['Cuarto secundario', 'Distancia (m)', 'Enlaces', 'Fibras base', 'Fibras con reserva', 'Tipo sugerido'].map(t => th(t)))].concat(fib.map(f => tr([td('<b>' + esc(f.cuarto.codigo) + '</b>', { raw: true }), td(f.distancia || '', { al: 'center' }), td(f.enlaces, { al: 'center' }), td(f.base, { al: 'center' }), td(f.total, { al: 'center' }), td(f.tipo || 'Falta la distancia')])))));
+      }
     }
     rooms.forEach(c => b.push(roomSection(c, ix, project)));
     if (!onlyRoomId) {

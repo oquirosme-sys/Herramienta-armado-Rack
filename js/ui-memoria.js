@@ -22,10 +22,17 @@
       h('div', { class: 'toolbar no-print' }, UI.btn('Imprimir / PDF', () => window.print()), UI.btn('Exportar materiales (CSV)', () => exportBom(P)), UI.btn('Exportar resumen a Word', () => ExportDoc.download(), 'primary'), UI.btn('Exportar resumen a Excel', () => ExportXlsx.download(), 'primary')));
 
     /* 1. cuartos */
-    const t1 = h('table', { class: 'tbl' }, th(['Cuarto', 'Descripción', 'Rack / gabinete', 'RU ocupados', 'RU libres', '% llenado rack', 'Patch panels', 'Puertos', 'Salidas', '% llenado PP']),
-      h('tbody', null, R.map(c => h('tr', { class: c.excede ? 'over' : '' }, h('td', null, h('b', null, c.room.codigo)), h('td', null, c.room.descripcion), h('td', null, c.rack ? c.rack.parte + (c.rackQty > 1 ? ' ×' + c.rackQty : '') : '—'),
+    const t1 = h('table', { class: 'tbl' }, th(['Rack', 'Cuarto', 'Descripción', 'Rack / gabinete', 'RU ocupados', 'RU libres', '% llenado rack', 'Patch panels', 'Puertos', 'Salidas', '% llenado PP']),
+      h('tbody', null, R.map(c => h('tr', { class: c.excede ? 'over' : '' }, h('td', null, h('b', null, c.room.codigo)), h('td', null, c.prefix + (c.cuarto && c.cuarto.tipo === 'principal' ? ' (principal)' : '')), h('td', null, c.room.descripcion), h('td', null, c.rack ? c.rack.parte + (c.rackQty > 1 ? ' ×' + c.rackQty : '') : '—'),
         num(c.ocupados), num(c.libres), h('td', { class: 'num' }, U.pct(c.pctRack)), num(c.panels.length), num(c.ports), num(c.outlets), h('td', { class: 'num' }, c.ports ? U.pct(c.pctPanel) : '–'))),
-        h('tr', { class: 'total' }, h('td', { colspan: 3 }, 'TOTAL'), num(P.tot.ocupados), num(P.tot.totalRU - P.tot.ocupados), h('td', { class: 'num' }, U.pct(P.tot.totalRU ? P.tot.ocupados / P.tot.totalRU : 0)), num(P.tot.panels), num(P.tot.ports), num(P.tot.outlets), h('td', { class: 'num' }, P.tot.ports ? U.pct(P.tot.outlets / P.tot.ports) : '–'))));
+        h('tr', { class: 'total' }, h('td', { colspan: 4 }, 'TOTAL'), num(P.tot.ocupados), num(P.tot.totalRU - P.tot.ocupados), h('td', { class: 'num' }, U.pct(P.tot.totalRU ? P.tot.ocupados / P.tot.totalRU : 0)), num(P.tot.panels), num(P.tot.ports), num(P.tot.outlets), h('td', { class: 'num' }, P.tot.ports ? U.pct(P.tot.outlets / P.tot.ports) : '–'))));
+
+    /* servicios, cobertura y fibra */
+    const act = Calc.serviciosActivos(p, cat), plan = Calc.planning(p, cat, P), fib = Calc.fibra(p, cat);
+    const tSrv = h('table', { class: 'tbl' }, th(['Red LAN', 'Servicios que la usan', 'Con PoE']), h('tbody', null, p.lans.map(l => { const sv = act.filter(t => p.servicios[t.codigo].lan === l.id); return h('tr', null, h('td', null, h('b', null, l.nombre)), h('td', null, sv.map(t => t.codigo + ' ' + t.nombre).join(', ') || '—'), h('td', null, sv.filter(t => p.servicios[t.codigo].poe).map(t => t.codigo).join(', ') || '—')); })));
+    const covRows = []; plan.forEach(q => q.rows.forEach(r => covRows.push(h('tr', { class: r.falta ? 'over' : '' }, h('td', null, h('b', null, q.cuarto.codigo)), h('td', null, r.tipo.codigo + ' — ' + r.tipo.nombre), num(r.req), num(r.reqRes), num(r.prov), h('td', null, r.falta ? 'Faltan ' + r.falta + ' puertos' : 'Cubierto')))));
+    const tCov = covRows.length ? h('table', { class: 'tbl' }, th(['Cuarto', 'Servicio', 'Salidas requeridas', 'Con reserva ' + p.reservaPct + ' %', 'Puertos en racks', 'Estado']), h('tbody', null, covRows)) : h('p', { class: 'empty' }, 'Sin salidas ingresadas en Proyecto.');
+    const tFib = fib.length ? h('table', { class: 'tbl' }, th(['Cuarto secundario', 'Distancia (m)', 'Enlaces', 'Fibras base', 'Fibras con reserva ' + (p.fibra.reserva || 0) + ' %', 'Tipo sugerido']), h('tbody', null, fib.map(f => h('tr', null, h('td', null, h('b', null, f.cuarto.codigo)), num(f.distancia), num(f.enlaces), num(f.base), h('td', { class: 'num strong' }, U.fmt(f.total)), h('td', null, f.tipo || 'Falta la distancia'))))) : h('p', { class: 'empty' }, 'Sin cuartos secundarios.');
 
     /* 2. salidas por tipo */
     const tipoRows = cat.tiposSalida.filter(t => t.codigo !== '-').map(t => ({ t, tot: P.outlets[t.codigo] || 0 }));
@@ -52,14 +59,17 @@
     const t6 = h('table', { class: 'tbl' }, th(['', 'Descripción', 'Marca', 'N.º de parte'].concat(roomCols, ['Total'])), bodyB);
 
     root.appendChild(h('div', { class: 'stack memo' }, enc,
-      UI.card('1. Resumen de cuartos', h('div', { class: 'table-wrap' }, t1)),
-      UI.card('2. Vista de cada rack', h('div', { class: 'elev-grid' }, R.map(c => {
+      UI.card('1. Resumen de racks y gabinetes', h('div', { class: 'table-wrap' }, t1)),
+      UI.card('2. Servicios y redes LAN', [h('div', { class: 'table-wrap' }, tSrv), h('p', { class: 'hint' }, 'Reserva de puertos: ' + p.reservaPct + ' %. Salidas ingresadas por ' + (p.modoSalidas === 'nivel' ? 'nivel del edificio' : 'cuarto') + '.')]),
+      UI.card('3. Cobertura de salidas por cuarto', h('div', { class: 'table-wrap' }, tCov)),
+      UI.card('4. Fibra troncal entre cuartos (estimado: validar por el ingeniero)', [h('p', { class: 'hint' }, 'Cuarto principal: ' + ((p.cuartos.find(c => c.tipo === 'principal') || {}).codigo || '—') + '. Un enlace por red LAN (' + (p.fibra.redundante ? 'redundante' : 'sin redundancia') + '), 2 fibras por enlace.'), h('div', { class: 'table-wrap' }, tFib)]),
+      UI.card('5. Vista de cada rack', h('div', { class: 'elev-grid' }, R.map(c => {
         const host = h('div', { class: 'elev-host' }); RoomView.drawElevation(host, c, c.room);
         return h('div', { class: 'elev-item' }, h('h4', null, c.room.codigo + (c.room.descripcion ? ' — ' + c.room.descripcion : '')), h('p', { class: 'muted' }, (c.rack ? c.rack.descripcion : 'Sin rack') + ' · ' + c.ocupados + ' / ' + c.totalRU + ' RU (' + U.pct(c.pctRack) + ')'), host);
       }))),
-      UI.card('3. Salidas por tipo', h('div', { class: 'table-wrap' }, t2)),
-      UI.card('4. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),
-      UI.card('5. Lista de materiales (rack, equipos y jacks)', [h('p', { class: 'hint' }, 'Incluye racks, organizadores, equipos de la lista, equipos fuera del rack y un jack por salida. No incluye espacios libres ni reservados.'), h('div', { class: 'table-wrap' }, t6)])));
+      UI.card('6. Salidas por tipo', h('div', { class: 'table-wrap' }, t2)),
+      UI.card('7. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),
+      UI.card('8. Lista de materiales (rack, equipos y jacks)', [h('p', { class: 'hint' }, 'Incluye racks, organizadores, equipos de la lista, equipos fuera del rack y un jack por salida. No incluye espacios libres ni reservados.'), h('div', { class: 'table-wrap' }, t6)])));
   }
 
   function exportBom(P) {
