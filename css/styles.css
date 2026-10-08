@@ -127,6 +127,7 @@ input[type=color] { padding: 0; height: 28px; width: 44px; }
 .eq-t { flex: 1; min-width: 0; font-size: .82rem; } .eq-t .muted { font-size: .74rem; } .qty { font-weight: 700; font-size: 1rem; color: var(--brand); padding-right: .3rem; }
 .elev-pair { display: grid; grid-template-columns: minmax(250px, 300px) minmax(0, 1fr); gap: .8rem; align-items: start; }
 .img-pick { display: grid; grid-template-columns: 150px 1fr; gap: .8rem; align-items: start; } .img-prev { width: 150px; height: 120px; border: 1px dashed var(--line); border-radius: 8px; display: grid; place-items: center; background: #fff; overflow: hidden; } .img-prev img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.diag { overflow-x: auto; } .diag svg { max-width: 100%; height: auto; display: block; margin: 0 auto; } .card:has(.diag) { break-inside: avoid; }
 .gl-cat { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 40%); gap: 1rem; } .gl-cat h3 { font-size: 1.15rem; color: var(--brand); margin-bottom: .3rem; } .gl-cat p { margin: .3rem 0; text-align: justify; }
 .gl-imgs { display: flex; flex-wrap: wrap; gap: .5rem; align-content: flex-start; justify-content: center; } .gl-imgs img { max-width: 48%; max-height: 150px; object-fit: contain; border-radius: 6px; border: 1px solid var(--line-2); background: #fff; }
 .gl-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .5rem; margin-top: .8rem; }

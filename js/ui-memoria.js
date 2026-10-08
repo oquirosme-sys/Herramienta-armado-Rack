@@ -34,6 +34,8 @@
     const tCov = covRows.length ? h('table', { class: 'tbl' }, th(['Cuarto', 'Servicio', 'Salidas requeridas', 'Con reserva ' + p.reservaPct + ' %', 'Puertos en racks', 'Estado']), h('tbody', null, covRows)) : h('p', { class: 'empty' }, 'Sin salidas ingresadas en Proyecto.');
     const tFib = fib.length ? h('table', { class: 'tbl' }, th(['Cuarto secundario', 'Distancia (m)', 'Enlaces', 'Fibras base', 'Fibras con reserva ' + (p.fibra.reserva || 0) + ' %', 'Tipo sugerido']), h('tbody', null, fib.map(f => h('tr', null, h('td', null, h('b', null, f.cuarto.codigo)), num(f.distancia), num(f.enlaces), num(f.base), h('td', { class: 'num strong' }, U.fmt(f.total)), h('td', null, f.tipo || 'Falta la distancia'))))) : h('p', { class: 'empty' }, 'Sin cuartos secundarios.');
 
+    const dg = Diagrama.build(p, cat, P); const diag = h('div', { class: 'diag' }); if (dg) diag.innerHTML = dg.svg; else diag.appendChild(h('p', { class: 'empty' }, 'Agregue cuartos y racks en Proyecto para generar el diagrama.'));
+
     /* 2. salidas por tipo */
     const tipoRows = cat.tiposSalida.filter(t => t.codigo !== '-').map(t => ({ t, tot: P.outlets[t.codigo] || 0 }));
     const sinSal = P.tot.ports - P.tot.outlets;
@@ -61,15 +63,16 @@
     root.appendChild(h('div', { class: 'stack memo' }, enc,
       UI.card('1. Resumen de racks y gabinetes', h('div', { class: 'table-wrap' }, t1)),
       UI.card('2. Servicios y redes LAN', [h('div', { class: 'table-wrap' }, tSrv), h('p', { class: 'hint' }, 'Reserva de puertos: ' + p.reservaPct + ' %. Salidas ingresadas por ' + (p.modoSalidas === 'nivel' ? 'nivel del edificio' : 'cuarto') + '.')]),
-      UI.card('3. Cobertura de salidas por cuarto', h('div', { class: 'table-wrap' }, tCov)),
-      UI.card('4. Fibra troncal entre cuartos (estimado: validar por el ingeniero)', [h('p', { class: 'hint' }, 'Cuarto principal: ' + ((p.cuartos.find(c => c.tipo === 'principal') || {}).codigo || '—') + '. Un enlace por red LAN (' + (p.fibra.redundante ? 'redundante' : 'sin redundancia') + '), 2 fibras por enlace.'), h('div', { class: 'table-wrap' }, tFib)]),
-      UI.card('5. Vista de cada rack', h('div', { class: 'elev-grid' }, R.map(c => {
+      UI.card('3. Diagrama de conexión entre cuartos y racks / gabinetes', diag),
+      UI.card('4. Cobertura de salidas por cuarto', h('div', { class: 'table-wrap' }, tCov)),
+      UI.card('5. Fibra troncal entre cuartos (estimado: validar por el ingeniero)', [h('p', { class: 'hint' }, 'Cuarto principal: ' + ((p.cuartos.find(c => c.tipo === 'principal') || {}).codigo || '—') + '. Un enlace por red LAN (' + (p.fibra.redundante ? 'redundante' : 'sin redundancia') + '), 2 fibras por enlace.'), h('div', { class: 'table-wrap' }, tFib)]),
+      UI.card('6. Vista de cada rack', h('div', { class: 'elev-grid' }, R.map(c => {
         const host = h('div', { class: 'elev-host' }); RoomView.drawElevation(host, c, c.room);
         return h('div', { class: 'elev-item' }, h('h4', null, c.room.codigo + ' · cuarto ' + c.prefix + (c.room.descripcion ? ' — ' + c.room.descripcion : '')), h('p', { class: 'muted' }, (c.rack ? c.rack.descripcion : 'Sin rack') + ' · ' + c.ocupados + ' / ' + c.totalRU + ' RU (' + U.pct(c.pctRack) + ')'), h('div', { class: 'elev-pair' }, host, RoomView.equipList(c)));
       }))),
-      UI.card('6. Salidas por tipo', h('div', { class: 'table-wrap' }, t2)),
-      UI.card('7. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),
-      UI.card('8. Lista de materiales (rack, equipos y jacks)', [h('p', { class: 'hint' }, 'Incluye racks, organizadores, equipos de la lista, equipos fuera del rack y un jack por salida. No incluye espacios libres ni reservados.'), h('div', { class: 'table-wrap' }, t6)])));
+      UI.card('7. Salidas por tipo', h('div', { class: 'table-wrap' }, t2)),
+      UI.card('8. Potencia, calor y peso', h('div', { class: 'table-wrap' }, t5)),
+      UI.card('9. Lista de materiales (rack, equipos y jacks)', [h('p', { class: 'hint' }, 'Incluye racks, organizadores, equipos de la lista, equipos fuera del rack y un jack por salida. No incluye espacios libres ni reservados.'), h('div', { class: 'table-wrap' }, t6)])));
   }
 
   function exportBom(P) {

@@ -13,7 +13,7 @@
   function zip(files) {
     const parts = [], central = []; let off = 0;
     files.forEach(f => {
-      const name = enc.encode(f.name), data = enc.encode(f.data), crc = crc32(data);
+      const name = enc.encode(f.name), data = typeof f.data === 'string' ? enc.encode(f.data) : f.data, crc = crc32(data);
       const lh = new DataView(new ArrayBuffer(30));
       lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true); lh.setUint16(10, 0, true); lh.setUint16(12, 0x21, true);
       lh.setUint32(14, crc, true); lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
@@ -54,7 +54,7 @@
   function Sheet(name, st) {
     const rows = [], merges = [], widths = []; let filter = null;
     const api = {
-      name,
+      name, picture: null,
       set(r, c, v, style) { (rows[r] = rows[r] || [])[c] = { v, s: st.get(style) }; return api; },
       merge(r1, c1, r2, c2) { merges.push(colName(c1) + (r1 + 1) + ':' + colName(c2) + (r2 + 1)); return api; },
       width(c, w) { widths[c] = w; return api; },
@@ -66,12 +66,12 @@
           if (typeof c.v === 'number') return '<c r="' + ref + '" s="' + c.s + '"><v>' + c.v + '</v></c>';
           return '<c r="' + ref + '" s="' + c.s + '" t="inlineStr"><is><t xml:space="preserve">' + xe(c.v) + '</t></is></c>';
         }).join('') + '</row>' : '').join('');
-        return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>'
+        return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>'
           + '<sheetViews><sheetView workbookViewId="0" showGridLines="0"/></sheetViews><sheetFormatPr defaultRowHeight="13"/>'
           + (widths.length ? '<cols>' + widths.map((w, i) => w ? '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + w + '" customWidth="1"/>' : '').join('') + '</cols>' : '')
           + '<sheetData>' + sd + '</sheetData>' + (filter ? '<autoFilter ref="' + filter + '"/>' : '')
           + (merges.length ? '<mergeCells count="' + merges.length + '">' + merges.map(m => '<mergeCell ref="' + m + '"/>').join('') + '</mergeCells>' : '')
-          + '<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup orientation="landscape" fitToWidth="1" fitToHeight="0"/></worksheet>';
+          + '<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup orientation="landscape" fitToWidth="1" fitToHeight="0"/>' + (api.picture ? '<drawing r:id="rId1"/>' : '') + '</worksheet>';
       },
     };
     return api;
@@ -84,7 +84,7 @@
   const C = { al: 'center' };
   const W = { wrap: true };
 
-  function build(project, catalog, onlyRoomId) {
+  function build(project, catalog, onlyRoomId, png, dg) {
     const P = Calc.calcProject(project, catalog), ix = P.ix, st = Styles();
     const sheets = [], used = {};
     const mk = n => { let b = n.replace(/[:\\/?*\[\]]/g, '-').slice(0, 28), nn = b, i = 2; while (used[nn.toLowerCase()]) nn = b.slice(0, 26) + '_' + i++; used[nn.toLowerCase()] = 1; const s = Sheet(nn, st); sheets.push(s); return s; };
@@ -114,6 +114,11 @@
         z += k + 3; if (fib.length) { s.set(z - 1, 0, 'Fibra troncal entre cuartos (estimado: validar por el ingeniero)', { b: 1, sz: 11, border: false }); hdr(s, z, 0, ['Cuarto secundario', 'Distancia (m)', 'Enlaces', 'Fibras base', 'Fibras con reserva', 'Tipo sugerido']); fib.forEach((f, i) => [f.cuarto.codigo, f.distancia || '', f.enlaces, f.base, f.total, f.tipo || 'Falta la distancia'].forEach((v, j) => s.set(z + 1 + i, j, v, j > 0 && j < 5 ? C : {}))); }
       }
       [10, 38, 30, 12, 10, 12, 12, 10, 10, 12].forEach((w, i) => s.width(i, w)); for (let k = 0; k < P.rooms.length; k++) s.width(2 + k, Math.max(s.__w || 0, 12));
+    }
+
+    if (!onlyRoomId && png) {
+      const d = mk('Diagrama'); d.set(0, 0, 'Diagrama de conexión entre cuartos y racks / gabinetes', T);
+      const k = Math.min(1, 1100 / dg.w); d.picture = { w: Math.round(dg.w * k), h: Math.round(dg.h * k) };
     }
 
     /* Por nivel */
@@ -177,19 +182,30 @@
     }
 
     const files = [
-      { name: '[Content_Types].xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' + sheets.map((s, i) => '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('') + '</Types>' },
+      { name: '[Content_Types].xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' + sheets.map((s, i) => '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('') + '</Types>' },
       { name: '_rels/.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>' },
       { name: 'xl/workbook.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' + sheets.map((s, i) => '<sheet name="' + xe(s.name) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>').join('') + '</sheets></workbook>' },
       { name: 'xl/_rels/workbook.xml.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + sheets.map((s, i) => '<Relationship Id="rId' + (i + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>').join('') + '<Relationship Id="rId' + (sheets.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>' },
     ];
     sheets.forEach((s, i) => files.push({ name: 'xl/worksheets/sheet' + (i + 1) + '.xml', data: s.xml() }));
+    sheets.forEach((s, i) => {
+      if (!s.picture) return;
+      const E = v => Math.round(v * 9525);
+      files.push({ name: 'xl/worksheets/_rels/sheet' + (i + 1) + '.xml.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing1.xml"/></Relationships>' });
+      files.push({ name: 'xl/drawings/drawing1.xml', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><xdr:oneCellAnchor><xdr:from><xdr:col>0</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>2</xdr:row><xdr:rowOff>0</xdr:rowOff></xdr:from><xdr:ext cx="' + E(s.picture.w) + '" cy="' + E(s.picture.h) + '"/><xdr:pic><xdr:nvPicPr><xdr:cNvPr id="2" name="Diagrama"/><xdr:cNvPicPr><a:picLocks noChangeAspect="1"/></xdr:cNvPicPr></xdr:nvPicPr><xdr:blipFill><a:blip xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></xdr:blipFill><xdr:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="' + E(s.picture.w) + '" cy="' + E(s.picture.h) + '"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></xdr:spPr></xdr:pic><xdr:clientData/></xdr:oneCellAnchor></xdr:wsDr>' });
+      files.push({ name: 'xl/drawings/_rels/drawing1.xml.rels', data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/image1.png"/></Relationships>' });
+      files.push({ name: 'xl/media/image1.png', data: png });
+      files[0].data = files[0].data.replace('</Types>', '<Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/></Types>');
+    });
     files.splice(3, 0, { name: 'xl/styles.xml', data: st.xml() }); // los estilos se generan al final (después de armar las hojas)
     return zip(files);
   }
 
-  function download(onlyRoomId) {
+  async function download(onlyRoomId) {
     const room = onlyRoomId ? Store.findRoom(onlyRoomId) : null;
-    const blob = build(Store.project, Store.catalog, onlyRoomId);
+    let dg = null, png = null;
+    if (!onlyRoomId) { dg = Diagrama.build(Store.project, Store.catalog); if (dg) { try { png = await Diagrama.toPng(dg.svg, dg.w, dg.h, 2); } catch (e) { png = null; } } }
+    const blob = build(Store.project, Store.catalog, onlyRoomId, png, dg);
     const name = (room ? 'rack-' + room.codigo : 'resumen-racks') + (Store.project.numero ? '-' + Store.project.numero : '') + '.xlsx';
     U.download(name, blob, blob.type);
   }

@@ -94,7 +94,7 @@
     return s.join('');
   }
 
-  function build(project, catalog, onlyRoomId) {
+  function build(project, catalog, onlyRoomId, diagram) {
     const P = Calc.calcProject(project, catalog), ix = P.ix;
     const rooms = onlyRoomId ? P.rooms.filter(c => c.room.id === onlyRoomId) : P.rooms;
     const R = P.rooms;
@@ -126,6 +126,11 @@
         b.push(table([tr(['Cuarto secundario', 'Distancia (m)', 'Enlaces', 'Fibras base', 'Fibras con reserva', 'Tipo sugerido'].map(t => th(t)))].concat(fib.map(f => tr([td('<b>' + esc(f.cuarto.codigo) + '</b>', { raw: true }), td(f.distancia || '', { al: 'center' }), td(f.enlaces, { al: 'center' }), td(f.base, { al: 'center' }), td(f.total, { al: 'center' }), td(f.tipo || 'Falta la distancia')])))));
       }
     }
+    if (!onlyRoomId && diagram) {
+      const k = Math.min(1, 990 / diagram.w);
+      b.push('<br style="page-break-before:always" clear="all">'); b.push(h2('Diagrama de conexión entre cuartos y racks / gabinetes'));
+      b.push('<p style="margin:2pt 0"><img src="diagrama.png" width="' + Math.round(diagram.w * k) + '" height="' + Math.round(diagram.h * k) + '" alt="Diagrama de conexión"></p>');
+    }
     rooms.forEach(c => b.push(roomSection(c, ix, project)));
     if (!onlyRoomId) {
       const bom = Object.values(P.bom).filter(o => o.item).sort((a, c) => a.item.categoria.localeCompare(c.item.categoria) || a.item.descripcion.localeCompare(c.item.descripcion));
@@ -138,11 +143,23 @@
       + b.join('') + '</div></body></html>';
   }
 
-  function download(onlyRoomId) {
+  const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(s).replace(/(.{76})/g, '$1\r\n'); };
+  /** Documento MIME (.doc con la imagen del diagrama incluida), que Word abre directamente. */
+  function mhtml(html, png) {
+    const bd = '----=_NextPart_rackcode_' + Date.now();
+    return ['MIME-Version: 1.0', 'Content-Type: multipart/related; boundary="' + bd + '"; type="text/html"', '', '--' + bd, 'Content-Type: text/html; charset="utf-8"', 'Content-Transfer-Encoding: base64', 'Content-Location: file:///resumen.htm', '', b64(enc.encode(html)), '',
+      '--' + bd, 'Content-Type: image/png', 'Content-Transfer-Encoding: base64', 'Content-Location: diagrama.png', '', b64(png), '', '--' + bd + '--', ''].join('\r\n');
+  }
+  const enc = new TextEncoder();
+
+  async function download(onlyRoomId) {
     const room = onlyRoomId ? Store.findRoom(onlyRoomId) : null;
-    const html = build(Store.project, Store.catalog, onlyRoomId);
+    let dg = null, png = null;
+    if (!onlyRoomId) { dg = Diagrama.build(Store.project, Store.catalog); if (dg) { try { png = await Diagrama.toPng(dg.svg, dg.w, dg.h, 2); } catch (e) { dg = null; } } }
+    const html = build(Store.project, Store.catalog, onlyRoomId, png ? dg : null);
     const name = (room ? 'rack-' + room.codigo : 'resumen-racks') + (Store.project.numero ? '-' + Store.project.numero : '') + '.doc';
-    U.download(name, '﻿' + html, 'application/msword;charset=utf-8');
+    if (png) U.download(name, mhtml(String.fromCharCode(0xFEFF) + html, png), 'application/msword');
+    else U.download(name, String.fromCharCode(0xFEFF) + html, 'application/msword;charset=utf-8');
   }
 
   g.ExportDoc = { build, download };
