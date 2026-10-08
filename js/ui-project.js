@@ -27,11 +27,11 @@
     const jacks = Store.itemsByRole('jack');
     const datos = h('div', { class: 'grid cols-3' },
       UI.field('Nombre del proyecto', UI.input(p, 'nombre', { placeholder: 'Ej. Edificio Corporativo' }), null, 'span-2'),
-      UI.field('Proyecto #', UI.input(p, 'numero')),
-      UI.field('Ubicación', UI.input(p, 'ubicacion'), null, 'span-2'),
+      UI.field('Proyecto #', UI.input(p, 'numero', { placeholder: 'Ej. 2026-014' })),
+      UI.field('Ubicación', UI.input(p, 'ubicacion', { placeholder: 'Ej. San José, Costa Rica' }), null, 'span-2'),
       UI.field('Fecha', UI.input(p, 'fecha', { type: 'date' })),
-      UI.field('Elaboró', UI.input(p, 'elaboro')),
-      UI.field('Revisión del plano', UI.input(p, 'revision')),
+      UI.field('Elaboró', UI.input(p, 'elaboro', { placeholder: 'Ej. Nombre del ingeniero' })),
+      UI.field('Revisión del plano', UI.input(p, 'revision', { placeholder: 'Ej. Rev. A' })),
       UI.field('Jack por defecto', UI.select(UI.itemOptions(jacks, '— sin jack —'), p.jackId, v => { p.jackId = v; Store.save(); }), 'Se cuenta uno por cada salida etiquetada en la lista de materiales.'));
 
     /* ---------------- servicios y redes LAN ---------------- */
@@ -116,7 +116,7 @@
         const upd = () => { tt.textContent = U.fmt(cols.reduce((a, c) => a + (Number((c.salidas || {})[t.codigo]) || 0), 0)); };
         upd(); totCells[t.codigo] = upd;
         body.appendChild(h('tr', null, h('td', null, h('b', null, t.codigo)), h('td', null, t.nombre),
-          cols.map(c => { c.salidas = c.salidas || {}; return h('td', null, UI.input(c.salidas, t.codigo, { type: 'number', min: 0, step: 1, class: 'w-num', label: t.nombre + ' — ' + (c.codigo || c.nombre), after: () => { upd(); renderDerived(); } })); }), tt));
+          cols.map(c => { c.salidas = c.salidas || {}; return h('td', null, UI.input(c.salidas, t.codigo, { type: 'number', min: 0, step: 1, class: 'w-num', placeholder: '0', label: t.nombre + ' — ' + (c.codigo || c.nombre), after: () => { upd(); renderDerived(); } })); }), tt));
       });
       matrixHost.appendChild(h('div', null, h('h4', null, 'Salidas por servicio (cantidad de salidas en los puestos de trabajo)'), h('div', { class: 'table-wrap' }, h('table', { class: 'tbl' },
         h('thead', null, h('tr', null, ['Código', 'Servicio'].concat(cols.map(c => c.codigo || c.nombre), ['Total']).map(t => h('th', null, t)))), body))));

@@ -90,7 +90,7 @@
       const tipoSel = UI.select(tipos, eq.tipo || '', v => { eq.tipo = v; Store.save(); refresh(); }, { label: 'Tipo de salida', class: 'w-tipo' });
       const salInp = UI.input(eq, 'salidas', { type: 'number', min: 0, step: 1, class: 'w-num', label: 'Salidas', after: refresh });
       const ptxt = h('span', { class: 'print-txt' });
-      const notas = UI.input(eq, 'notas', { label: 'Notas' });
+      const notas = UI.input(eq, 'notas', { label: 'Notas', placeholder: 'Ej. Fibra óptica' });
       const masBtn = h('button', { type: 'button', class: 'btn small more', title: 'Agregar otros tipos de salida en este mismo panel', onclick: () => masDialog(eq, refresh, masBtn) });
       const masTxt = () => { masBtn.textContent = (eq.mas && eq.mas.length) ? '+' + eq.mas.length : '+ tipo'; };
       masTxt();
