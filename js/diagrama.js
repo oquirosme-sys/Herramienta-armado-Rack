@@ -24,10 +24,13 @@
     const RW = 156, RH = 62, PAD = 12, TITLE = 36, GAP = 36;
     const box = c => {
       const racks = P.rooms.filter(r => r.room.cuartoId === c.id), per = Math.min(3, Math.max(1, racks.length)), rows = Math.max(1, Math.ceil(racks.length / per));
-      const w = Math.max(290, per * (RW + PAD) + PAD), bus = racks.length > 1 ? 18 : 0;
+      const bus = racks.length > 1 ? 18 : 0;
       const out = {}; racks.forEach(r => { for (const k in r.outletsByType) out[k] = (out[k] || 0) + r.outletsByType[k]; });
       const tot = Object.values(out).reduce((a, b) => a + b, 0);
-      return { c, racks, per, rows, w, h: TITLE + bus + rows * (RH + PAD) + PAD + 30, bus, out, tot };
+      const items = (Object.keys(out).length ? Object.keys(out).map(k => k + ' ' + out[k]).join('  ·  ') + '   =   ' : '') + tot + ' salidas';
+      const need = Math.max(items.length * 6.4 + 40, ('Cuarto ' + c.codigo + ' — secundario').length * 7.6 + 30, (c.nombre || '').length * 5.8 + 30);
+      const w = Math.ceil(Math.max(290, per * (RW + PAD) + PAD, need));
+      return { c, racks, per, rows, w, h: TITLE + bus + rows * (RH + PAD) + PAD + 46, bus, out, tot, items };
     };
     const bp = box(principal), bs = sec.map(box);
     const secW = bs.reduce((a, b) => a + b.w, 0) + Math.max(0, bs.length - 1) * GAP;
@@ -49,7 +52,7 @@
       s.push('<rect x="' + b.x + '" y="' + b.y + '" width="' + b.w + '" height="' + b.h + '" rx="10" fill="#ffffff" stroke="' + (principalo ? '#0b5cab' : '#4a5a6a') + '" stroke-width="' + (principalo ? 2.5 : 1.6) + '"/>');
       s.push('<rect x="' + b.x + '" y="' + b.y + '" width="' + b.w + '" height="' + TITLE + '" rx="10" fill="' + (principalo ? '#0b5cab' : '#4a5a6a') + '"/><rect x="' + b.x + '" y="' + (b.y + 14) + '" width="' + b.w + '" height="' + (TITLE - 14) + '" fill="' + (principalo ? '#0b5cab' : '#4a5a6a') + '"/>');
       s.push(txt(b.x + b.w / 2, b.y + 15, 'Cuarto ' + c.codigo + (principalo ? ' — PRINCIPAL' : ' — secundario'), { c: '#fff', b: true, sz: 12 }));
-      s.push(txt(b.x + b.w / 2, b.y + 29, trunc(c.nombre || '', 34), { c: '#e8eef6', sz: 10 }));
+      if (c.nombre && c.nombre.toLowerCase() !== 'principal' && c.nombre.toLowerCase() !== 'secundario') s.push(txt(b.x + b.w / 2, b.y + 29, c.nombre, { c: '#e8eef6', sz: 10 }));
       const y0 = b.y + TITLE + b.bus + PAD / 2;
       if (b.racks.length > 1) {
         const yb = b.y + TITLE + 9;
@@ -68,9 +71,10 @@
         s.push(txt(rx + RW / 2, ry + 56, r.panels.length + ' patch panel · ' + r.outlets + ' salidas', { sz: 9.5, c: '#333' }));
       });
       // salidas a los puestos de trabajo (pie del cuarto)
-      const items = Object.keys(b.out).map(k => k + ' ' + b.out[k]).join('  ·  '), yf = b.y + b.h - 26;
+      const yf = b.y + b.h - 44;
       s.push('<line x1="' + (b.x + 10) + '" y1="' + yf + '" x2="' + (b.x + b.w - 10) + '" y2="' + yf + '" stroke="#ddd"/>');
-      s.push(txt(b.x + b.w / 2, yf + 17, 'Salidas → puestos de trabajo: ' + (items ? trunc(items, 40) + '  =  ' : '') + b.tot, { sz: 10, b: true, c: '#5a4a00' }));
+      s.push(txt(b.x + b.w / 2, yf + 16, 'Salidas hacia los puestos de trabajo', { sz: 9.5, c: '#555' }));
+      s.push(txt(b.x + b.w / 2, yf + 33, b.items, { sz: 10.5, b: true, c: '#5a4a00' }));
     };
     drawCuarto(bp, true);
     bs.forEach(b => drawCuarto(b, false));
@@ -88,7 +92,7 @@
       });
       const lbl = f && f.distancia ? f.total + ' fibras ' + (f.tipo || '') + ' · ' + f.distancia + ' m' : (f ? f.total + ' fibras · falta distancia' : '');
       const lx = sx, ly = yEnd - 12;
-      s.push('<rect x="' + (lx - 92) + '" y="' + (ly - 14) + '" width="184" height="18" rx="4" fill="#fff" stroke="#bbb"/>' + txt(lx, ly - 1, lbl, { sz: 10, b: true }));
+      const lw = Math.ceil(lbl.length * 6.3 + 24); s.push('<rect x="' + (lx - lw / 2) + '" y="' + (ly - 14) + '" width="' + lw + '" height="18" rx="4" fill="#fff" stroke="#bbb"/>' + txt(lx, ly - 1, lbl, { sz: 10, b: true }));
     });
 
     // leyenda
